@@ -13,6 +13,11 @@ class Relatoriodia extends StatefulWidget {
 
 class _RelatoriodiaState extends State<Relatoriodia> {
   double niveldor = 5;
+  String? _fadiga;
+  bool nausea = false;
+  bool faltaDeAr = false;
+  bool tosse = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +72,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                     ],
                   ),
                 ),
-                const SizedBox( height: 60),
+                SizedBox( height: 40),
 
 
                 Text(
@@ -137,6 +142,153 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ),
+
+                Row(
+                  children: [
+                    Radio<String>(
+                        value: 'Leve',
+                        groupValue: _fadiga,
+                        onChanged: (valor){
+                          setState(() {
+                            _fadiga = valor;
+                          });
+                        }
+                    ),
+                    Text(
+                      'LEVE',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    Radio<String>(
+                        value: 'Moderada',
+                        groupValue: _fadiga,
+                        onChanged: (valor){
+                          setState(() {
+                            _fadiga = valor;
+                          });
+                        }
+                    ),
+                    Text(
+                      'MODERADA',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Radio<String>(
+                        value: 'Intensa',
+                        groupValue: _fadiga,
+                        onChanged: (valor){
+                          setState(() {
+                            _fadiga = valor;
+                          });
+                        }
+                    ),
+                    Text(
+                      'INTENSA',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox( height: 10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'EFEITOS COLATERAIS ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                Row(
+                  children: [
+                    Checkbox(
+                        value: nausea,
+                        onChanged: (bool? valor){
+                          setState(() {
+                            nausea = valor ?? false;
+                          });
+                        }
+                    ),
+                    Text(
+                      'NÁUSEA',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Checkbox(
+                        value: faltaDeAr,
+                        onChanged: (bool? valor){
+                          setState(() {
+                            faltaDeAr = valor ?? false;
+                          });
+                        }
+                    ),
+                    Text(
+                      'FALTA DE AR',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Checkbox(
+                        value: tosse,
+                        onChanged: (bool? valor){
+                          setState(() {
+                            tosse = valor ?? false;
+                          });
+                        }
+                    ),
+                    Text(
+                      'TOSSE',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox( height: 10),
+
+                ElevatedButton(
+                    onPressed: (){
+                      print('llllll');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'SALVAR RELATÓRIO',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ),
+
+                SizedBox(height: 15),
+                Text(
+                  'Sinto que você está tendo um dia difícil. Que tal respirar fundo e caminhar por 5 minutos?',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
