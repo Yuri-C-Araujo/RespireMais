@@ -1,18 +1,20 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Medicamento extends StatelessWidget {
   const Medicamento({super.key});
 
-
-  final List<Map<String, String>> medicamentos = const [
+  static const List<Map<String, String>> medicamentos = [
     {
       'nome': 'XALKORI',
-      'imagem': 'https://pmlive.com/wp-content/uploads/2024/02/Pfizer-Xalkori-lung-cancer.jpg',
+      'imagem':
+      'https://pmlive.com/wp-content/uploads/2024/02/Pfizer-Xalkori-lung-cancer.jpg',
       'horario': '08 EM 08 HORAS',
     },
     {
       'nome': 'TAGRISSO',
-      'imagem': 'https://pfarma.com.br/images/noticias/tagrisso-medicamento-cancer.jpg',
+      'imagem':
+      'https://pfarma.com.br/images/noticias/tagrisso-medicamento-cancer.jpg',
       'horario': '06 EM 06 HORAS',
     },
   ];
@@ -20,54 +22,82 @@ class Medicamento extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Image.asset('imagem/Logo-Respire.png'),
-            const SizedBox(height: 20),
-            const Text(
-              'MEDICAMENTOS',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+      body: Stack(
+        children: [
+          // Fundo com logo opaco
+          Center(
+            child: Opacity(
+              opacity: 0.2,
+              child: Image.asset(
+                'imagem/Logo-Respire.png',
+                width: 600,
+                height: 600,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: medicamentos.map((med) {
-                return MedicamentoCard(
-                  nome: med['nome']!,
-                  imagem: med['imagem']!,
-                  horario: med['horario']!,
-                );
-              }).toList(),
+          ),
+
+          // Desfoque opcional
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(color: Colors.transparent),
             ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: () {
-                // Ação do botão
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'ADICIONAR MEDICAÇÃO',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+          ),
+
+          // Conteúdo principal
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    'MEDICAMENTOS',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: medicamentos.map((med) {
+                      return MedicamentoCard(
+                        nome: med['nome']!,
+                        imagem: med['imagem']!,
+                        horario: med['horario']!,
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Ação do botão
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'ADICIONAR MEDICAÇÃO',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                ],
               ),
             ),
-            const SizedBox(height: 50),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -123,7 +153,9 @@ class MedicamentoCard extends StatelessWidget {
                 return const SizedBox(
                   height: 60,
                   width: 100,
-                  child: Center(child: Icon(Icons.error, color: Colors.red)),
+                  child: Center(
+                    child: Icon(Icons.error, color: Colors.red),
+                  ),
                 );
               },
             ),
