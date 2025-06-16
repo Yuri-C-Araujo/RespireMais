@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class Medicamento extends StatelessWidget {
   const Medicamento();
 
-  static const List<Map<String, String>> medicamentos = [ // é uma lista de mapas.
+  static const List<Map<String, String>> medicamentos = [ // lista com os dados dos medicamentos
     {
       'nome': 'XALKORI',
       'imagem':
@@ -23,65 +23,65 @@ class Medicamento extends StatelessWidget {
   @override
   Widget build(BuildContext context) { // retorna um widget que representa a estrutura visual da tela
     return Scaffold( // estrutura basica em uma tela
-      bottomNavigationBar: Padding( // widget no final da tela
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(15), // espaçamento ao redor do botão
-        child: ElevatedButton( // botão com fundo elevado (
-          onPressed: () {}, // botão sem nada
-          style: ElevatedButton.styleFrom( // estilo do botao
+        child: ElevatedButton( // botão com fundo elevado
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15), // espaço interno
-            shape: RoundedRectangleBorder( // definição do formato do botão
-              borderRadius: BorderRadius.circular(8), // cantos arredondados
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // espaço interno
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
+            fixedSize: Size(300, 70), // largura e altura
           ),
           child: const Text(
             'ADICIONAR MEDICAÇÃO',
-            style: TextStyle( // definir aparencia de texto
-              fontWeight: FontWeight.bold, // negrito
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 15,
             ),
           ),
         ),
       ),
 
-      body: Stack( // conteúdo principal, um widget que permite colocar filhos em cima de outros
+      body: Stack( // para empilhar elementos uns sobre os outros
         children: [ // lista de widgets que serão empilhados dento do stack
           Center(
             child: Opacity(
               opacity: 0.4,
-              child: Image.asset( // imagem que está salva no projeto
+              child: Image.asset(
                 'imagem/Logo-Respire.png',
-                width: 500,
-                height: 500, // tamanho da imagem
+                width: 600,
+                height: 600,
                 fit: BoxFit.cover, // imagem preencher todo o espaço
               ),
             ),
           ),
 
-          Positioned.fill( // ocupar todo o espaço
-            child: BackdropFilter( // filtro de desfoque
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // define a intensidade do desfoque
-              child: Container(color: Colors.transparent), // container transparente
+          Positioned.fill( // preencha a area do espaço inserido
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // desfoque por cima da imagem
+              child: Container(color: Colors.transparent),
             ),
           ),
-
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(15),
-              child: Column(
+              padding: const EdgeInsets.all(15), // espaçamento interno
+              child: Column( // widgets na vertical
                 children: [
-                  const SizedBox(height: 15), // espaçamento do topo
-                  const Text(   // estilo do texto
+                  const SizedBox(height: 20),
+                  const Text(
                     'MEDICAMENTOS',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
                     ),
                   ),
 
-                  const SizedBox(height: 20), // espaçamento
+                  const SizedBox(height: 20),
 
                   Row( // organiza lado a lado
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly, // espaço disponivel igualmente
@@ -103,7 +103,7 @@ class Medicamento extends StatelessWidget {
   }
 }
 
-class ListaMedicamentos extends StatelessWidget { // exibe informações recebidas
+class ListaMedicamentos extends StatelessWidget { // criação do card
   final String nome; // o final é para que não haja alteração no construtor após atribuir os valores
   final String imagem;
   final String horario;
@@ -117,31 +117,30 @@ class ListaMedicamentos extends StatelessWidget { // exibe informações recebid
   @override //container
   Widget build(BuildContext context) {
     return Container(
-      width: 150, // largura
+      width: 150,
       padding: const EdgeInsets.all(8), // espaço interno
-      margin: const EdgeInsets.all(4), // espaço externo
-      decoration: BoxDecoration( // personalização
+      margin: const EdgeInsets.all (4), // espaço externo
+      decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
             color: Colors.black,
             blurRadius: 4,
-            offset: Offset(2, 2), // intensidade em ambos os lados
+            offset: Offset(2, 2),
           )
         ],
       ),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(8), // imagem com os cantos arrendodados
-            child: Image.network( // exibe uma imagem da internet
-              imagem, // exibe a imagem
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              imagem,
               height: 80,
               width: 100,
-              fit: BoxFit.cover, // faz a imagem preencher o espaço todo.
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-
                 return const SizedBox(
                   height: 80,
                   width: 100,
@@ -152,20 +151,22 @@ class ListaMedicamentos extends StatelessWidget { // exibe informações recebid
               },
             ),
           ),
+
           const SizedBox(height: 20), // espaçamento dos nomes do medicamento
 
           Text(
             nome,
-            style: const TextStyle( //formatação visual
-              fontWeight: FontWeight.bold, // negrito
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
               color: Colors.blue,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 5),
           Text(
             horario,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 15,
               color: Colors.lightBlueAccent,
             ),
           ),
