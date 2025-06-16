@@ -12,39 +12,31 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Define o fundo branco da tela
+      backgroundColor: Colors.white,
 
       appBar: AppBar(
-        // Cria a barra superior (AppBar)
-        toolbarHeight: 80, // Altura da AppBar
-        backgroundColor: Colors.white, // Cor de fundo da AppBar
-        elevation: 0, // Remove a sombra da AppBar
+        toolbarHeight: 80,
+        backgroundColor: Colors.white,
+        elevation: 0,
         actions: [
-          // Adiciona itens do lado direito da AppBar
           Container(
-            // Cria um container para o botão de perfil
-            margin: const EdgeInsets.all(12), // Espaçamento interno do botão
+            margin: const EdgeInsets.all(12), // Espaçamento da borda da tela para o botão
             decoration: BoxDecoration(
-              // Estilo do botão
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
-              // Bordas arredondadas (círculo)
               boxShadow: [
-                // Sombra do botão
                 BoxShadow(
-                  color: Colors.black87,
+                  color: Colors.black,
                   blurRadius: 6,
-                  offset: Offset(2, 5),
+                  offset: Offset(1, 3),
                 ),
               ],
             ),
             child: IconButton(
-              // Botão com ícone
               onPressed: () {
-                // ação do botão
               },
               icon: const Icon(
-                CupertinoIcons.person, // Ícone de pessoa (perfil)
+                CupertinoIcons.person,
                 color: Colors.blue,
                 size: 40,
               ),
@@ -54,26 +46,23 @@ class _MenuState extends State<Menu> {
       ),
 
       body: SingleChildScrollView(
-        // Permite rolar a tela
         child: Column(
-          // Organiza os elementos em coluna
           mainAxisAlignment: MainAxisAlignment.start,
-          // Alinha os itens no início da coluna
           children: [
             Center(
               // Centraliza o logo
-              heightFactor: 0.5, // Reduz o espaço vertical ocupado
+              heightFactor: 0.5, // Reduz o espaço vertical ocupado pela imagem
               child: Image.asset(
                 'assets/Logo-Respire.png',
-                height: 300, // Altura da imagem
+                height: 300,
               ),
             ),
             Text(
               'OLÁ, JOÃO',
               style: TextStyle(
-                fontSize: 28, // Tamanho da fonte
-                color: Colors.blue, // Cor azul
-                fontWeight: FontWeight.w900, // Texto negrito
+                fontSize: 28,
+                color: Colors.blue,
+                fontWeight: FontWeight.w900,
               ),
             ),
 
@@ -84,31 +73,24 @@ class _MenuState extends State<Menu> {
               children: [
                 // Botão 1
                 ElevatedButton(
-                  onPressed: () {}, // Ação ao clicar
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    // Estilo do botão
                     backgroundColor: Colors.white,
-                    // Cor de fundo branca
                     foregroundColor: Colors.blue,
                     // Cor dos elementos dentro
-                    minimumSize: Size(140, 140),
-                    // Tamanho mínimo
+                    minimumSize: Size(140, 140), //tamanho mínimo do botão
                     elevation: 6,
-                    // Sombra
                     shadowColor: Colors.black87,
-                    // Cor da sombra
                     shape: RoundedRectangleBorder(
-                      // Bordas arredondadas
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   child: Column(
                     // Conteúdo interno do botão
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // Centraliza o conteúdo
                     children: [
                       Icon(
-                        Icons.calendar_today_outlined, // Ícone de calendário
+                        Icons.calendar_today_outlined,
                         size: 60,
                         color: Colors.blue,
                       ),
@@ -161,7 +143,7 @@ class _MenuState extends State<Menu> {
               ],
             ),
 
-            const SizedBox(height: 20), // Espaço entre as linhas
+            const SizedBox(height: 20),
             // Segunda linha de botões
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -236,7 +218,7 @@ class _MenuState extends State<Menu> {
               ],
             ),
 
-            const SizedBox(height: 20), // Espaço antes do último botão
+            const SizedBox(height: 20),
             // Terceira linha
             Center(
               child: ElevatedButton(
