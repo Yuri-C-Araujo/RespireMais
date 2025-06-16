@@ -24,9 +24,9 @@ class _HistoricoState extends State<Historico> {
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: Colors.black87,
               blurRadius: 6,
-              offset: Offset(0, 6),
+              offset: Offset(1, 3),
             ),
           ],
         ),
@@ -42,7 +42,8 @@ class _HistoricoState extends State<Historico> {
           ],
         ),
         backgroundColor: Colors.white,
-        body: Column(
+        body: SingleChildScrollView(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Center(
@@ -193,7 +194,7 @@ class _HistoricoState extends State<Historico> {
                     ],
                   ),
                 ),
-              SizedBox(height: 40),
+              SizedBox(height: 100),
               ElevatedButton(
                   onPressed: (){},
                  style: ElevatedButton.styleFrom(
@@ -207,8 +208,8 @@ class _HistoricoState extends State<Historico> {
 
                    ),
                  ),
-                  child:
-                 Text('Gerar PDF / Compartilhar com médico',
+                child:
+                Text('Gerar PDF / Compartilhar com médico',
 
                    style: TextStyle(
                      fontSize: 20,
@@ -216,9 +217,11 @@ class _HistoricoState extends State<Historico> {
                    ),
                  ),
                ),
+                SizedBox(height: 20),
               ],
             ),
           ],
+        ),
         ),
       ),
     );
