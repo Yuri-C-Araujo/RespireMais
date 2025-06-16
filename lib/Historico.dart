@@ -20,13 +20,13 @@ class _HistoricoState extends State<Historico> {
             Container(
               margin: EdgeInsets.all(12),
               decoration:  BoxDecoration(
-        color: Colors.white,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 6,
-              offset: Offset(2, 5),
+              offset: Offset(0, 6),
             ),
           ],
         ),
@@ -193,13 +193,14 @@ class _HistoricoState extends State<Historico> {
                     ],
                   ),
                 ),
-              SizedBox(height: 100),
+              SizedBox(height: 40),
               ElevatedButton(
                   onPressed: (){},
                  style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                    foregroundColor: Colors.white,
                    elevation: 6,
+                   maximumSize: Size(450, 80),
                    padding: EdgeInsets.all(18),
                    shape: RoundedRectangleBorder(
                      borderRadius: BorderRadius.circular(12),
@@ -210,7 +211,7 @@ class _HistoricoState extends State<Historico> {
                  Text('Gerar PDF / Compartilhar com médico',
 
                    style: TextStyle(
-                     fontSize: 22,
+                     fontSize: 20,
                      fontWeight: FontWeight.bold,
                    ),
                  ),
