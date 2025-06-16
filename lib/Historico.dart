@@ -57,7 +57,7 @@ class _HistoricoState extends State<Historico> {
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.blue,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
                 height: 2,
               ),
             ),
@@ -88,7 +88,7 @@ class _HistoricoState extends State<Historico> {
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black87,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w900,
                       ),
                       ),
                   ),
@@ -121,7 +121,7 @@ class _HistoricoState extends State<Historico> {
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black87,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
@@ -153,7 +153,7 @@ class _HistoricoState extends State<Historico> {
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black87,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
@@ -186,7 +186,7 @@ class _HistoricoState extends State<Historico> {
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black87,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
@@ -212,7 +212,7 @@ class _HistoricoState extends State<Historico> {
 
                    style: TextStyle(
                      fontSize: 20,
-                     fontWeight: FontWeight.bold,
+                     fontWeight: FontWeight.w900,
                    ),
                  ),
                ),
