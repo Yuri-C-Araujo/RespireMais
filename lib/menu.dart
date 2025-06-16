@@ -45,9 +45,9 @@ class _MenuState extends State<Menu> {
         ],
       ),
 
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+      body: ListView(
+        //child: Column(
+          //mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Center(
               // Centraliza o logo
@@ -57,12 +57,14 @@ class _MenuState extends State<Menu> {
                 height: 300,
               ),
             ),
-            Text(
-              'OLÁ, JOÃO',
-              style: TextStyle(
-                fontSize: 28,
-                color: Colors.blue,
-                fontWeight: FontWeight.w900,
+            Center(
+              child: Text(
+                'OLÁ, JOÃO',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
 
@@ -256,7 +258,7 @@ class _MenuState extends State<Menu> {
             ),
           ],
         ),
-      ),
+      //),
     );
   }
 }
