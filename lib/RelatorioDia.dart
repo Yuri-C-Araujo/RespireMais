@@ -10,7 +10,7 @@ class Relatoriodia extends StatefulWidget {
 
 class _RelatoriodiaState extends State<Relatoriodia> {
   double niveldor = 5;
-  String? _fadiga;
+  String? fadiga;
   bool nausea = false;
   bool faltaDeAr = false;
   bool tosse = false;
@@ -20,22 +20,22 @@ class _RelatoriodiaState extends State<Relatoriodia> {
     return Scaffold(
       body: Stack(
         children: [
-          // Imagem de fundo
-          Center(
-            child: Image.asset(
-              'assets/Logo-Respire.png',
-              fit: BoxFit.cover,
-              width: 600,
-              height: 600,
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Image.asset(
+                'assets/Logo-Respire.png',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
 
-          // Filtro de desfoque (blur)
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(color: Colors.white.withOpacity(0.5)),
-            ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(color: Colors.white.withOpacity(0.5)),
           ),
 
           ListView(
@@ -84,13 +84,11 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   ),
                 ),
               ),
+
               SizedBox(height: 15),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'NÍVEL DE DOR ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+              Text(
+                'NÍVEL DE DOR ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
 
               Row(
@@ -116,22 +114,19 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                 ],
               ),
               SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'FADIGA ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+              Text(
+                'FADIGA ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
 
               Row(
                 children: [
                   Radio<String>(
                     value: 'Leve',
-                    groupValue: _fadiga,
+                    groupValue: fadiga,
                     onChanged: (valor) {
                       setState(() {
-                        _fadiga = valor;
+                        fadiga = valor;
                       });
                     },
                   ),
@@ -142,10 +137,10 @@ class _RelatoriodiaState extends State<Relatoriodia> {
 
                   Radio<String>(
                     value: 'Moderada',
-                    groupValue: _fadiga,
+                    groupValue: fadiga,
                     onChanged: (valor) {
                       setState(() {
-                        _fadiga = valor;
+                        fadiga = valor;
                       });
                     },
                   ),
@@ -155,10 +150,10 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   ),
                   Radio<String>(
                     value: 'Intensa',
-                    groupValue: _fadiga,
+                    groupValue: fadiga,
                     onChanged: (valor) {
                       setState(() {
-                        _fadiga = valor;
+                        fadiga = valor;
                       });
                     },
                   ),
@@ -169,12 +164,9 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                 ],
               ),
               SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'EFEITOS COLATERAIS ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+              Text(
+                'EFEITOS COLATERAIS ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
 
               Row(
