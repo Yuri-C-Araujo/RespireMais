@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:respire_mais/RelatorioDAO.dart';
+import 'package:respire_mais/relatorio.dart';
 
 class Relatoriodia extends StatefulWidget {
   const Relatoriodia({super.key});
@@ -14,6 +16,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
   bool nausea = false;
   bool faltaDeAr = false;
   bool tosse = false;
+  TextEditingController descricaoCont = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +76,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                 elevation: 8,
                 borderRadius: BorderRadius.circular(8),
                 child: TextField(
+                  controller: descricaoCont,
                   maxLines: 4,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -213,7 +217,29 @@ class _RelatoriodiaState extends State<Relatoriodia> {
               SizedBox(height: 10),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  String descricao = descricaoCont.text;
+                  String data = DateTime.now().toIso8601String();
+
+                  Relatorio relatorio = Relatorio(
+                    descricao: descricao,
+                    niveldor: niveldor,
+                    fadiga: fadiga,
+                    nausea: nausea,
+                    faltaDeAr: faltaDeAr,
+                    tosse: tosse,
+                    data: data,
+                  );
+
+                  await RelatorioDao().salvarRelatorio(relatorio);
+                  await RelatorioDao().listarEImprimirRelatorios();
+                  
+                  print("oii");
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Relatório salvo com sucesso!')),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
