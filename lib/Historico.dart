@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:respire_mais/domain/Informacoes.dart';
+import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
 
 class Historico extends StatefulWidget {
   const Historico({super.key});
@@ -8,8 +10,21 @@ class Historico extends StatefulWidget {
   State<Historico> createState() => _HistoricoState();
 }
 
+
 class _HistoricoState extends State<Historico> {
+  List<Informacoes> listInformacoes = [];
+
   @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    listInformacoes = await Informacoes_dao().listInformacoes();
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -64,132 +79,15 @@ class _HistoricoState extends State<Historico> {
             ),
             Column(
               children: [
-                Container(
-                  width: 450,
-                  height: 95,
-                  padding: EdgeInsets.all(18),
-                  margin: EdgeInsets.all(12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 6,
-                          offset: Offset(2, 5)),
-                    ],
+
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: listInformacoes.length,
+                    itemBuilder: (context, i) {
+                      return buildInformacao(listInformacoes[i]);
+                    },
                   ),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          '13/04 - Dor 5/10 | Fadiga: Moderada |Efeito Colateral: Tosse',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 450,
-                  height: 95,
-                  padding: EdgeInsets.all(18),
-                  margin: EdgeInsets.all(12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 6,
-                          offset: Offset(2, 5)),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '12/04 - Dor 3/10 | Fadiga: leve',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 450,
-                  height: 95,
-                  padding: EdgeInsets.all(18),
-                  margin: EdgeInsets.all(12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 6,
-                          offset: Offset(2, 5)),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          '11/04 - Dor 8/10 | Fadiga Intensa |Efeito Colateral: Náusea',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 450,
-                  height: 95,
-                  padding: EdgeInsets.all(18),
-                  margin: EdgeInsets.all(12),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 6,
-                          offset: Offset(2, 5)),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '10/04 - Dor 0/10 | Fadiga: Leve',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 SizedBox(height: 100),
                 ElevatedButton(
                   onPressed: () {},
@@ -219,4 +117,39 @@ class _HistoricoState extends State<Historico> {
       ),
     );
   }
+}
+
+
+buildInformacao(Informacoes info) {
+  return Container(
+    width: 450,
+    height: 95,
+    padding: EdgeInsets.all(18),
+    margin: EdgeInsets.all(12),
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black38,
+            blurRadius: 6,
+            offset: Offset(2, 5)),
+      ],
+    ),
+    child: Column(
+      children: [
+        Center(
+          child: Text(
+            "${info.datas} - Dor ${info.dor} | Fadiga: ${info.fadiga} | Efeito: ${info.efeitoColateral == '' ? "Nenhum" : info.efeitoColateral}",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black87,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

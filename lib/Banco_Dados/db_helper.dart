@@ -1,36 +1,35 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
-
 class DBHelper {
   Future<Database> initDB() async {
-    String pach = await getDatabasesPath();
-    String dbName = 'sent_db';
-    String dbPach = join(pach, dbName);
-    print(dbPach);
-    var db = await openDatabase(dbPach, version: 1, onCreate: onCreate);
-    return db;
+  String pach = await getDatabasesPath();
+  String dbName = 'historico_db';
+  String dbPach = join(pach, dbName);
+  print(dbPach);
+  var db = await openDatabase(dbPach, version: 1, onCreate: onCreate);
+  return db;
+}
+
+Future<void> onCreate(Database db, int version) async {
+
+  String sql = ''' CREATE TABLE Informacoes ( 
+  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+  datas TEXT,
+  dor TEXT,
+  fadiga TEXT,
+  efetColateral TEXT 
+  );''';
+  await db.execute(sql);
+
+  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('12/05', '6/10', 'Moderada', 'Tosse')";
+  await db.execute(sql);
+  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('11/05', '4/10', 'leve', '')";
+  await db.execute(sql);
+  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('10/05', '9/10', 'Intensa', 'Náusea')";
+  await db.execute(sql);
+  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('9/05', '1/10', 'Moderada', '')";
+  await db.execute(sql);
   }
-
-  Future<Void> onCreate(Database db, int version) async{
-
-    String sql = ''' CREATE TABLE Propriedade (
-    id integer PRIMARY KEY AUTOINCREMENT,
-    Data TEXT
-    Dor INT,
-    Fadiga TEXT,
-    EfetColateral TEXT
-    ''';
-
-    await db.execute(sql);
-
-    sql =
-        "INSERTE INTO Propriedade (Dor, Fadiga, EfetColateral) VALUES ()";
-
-
-  }
-
 }
