@@ -14,13 +14,13 @@ class RelatorioDao {
   }
   Future<void> listarEImprimirRelatorios() async {
     Database db = await DBHelper().initDB();
-    List<Map<String, dynamic>> resultados = await db.query('RELATORIO');
+    List<Map<String, dynamic>> resultados = await db.query('Relatorio');
 
     if (resultados.isEmpty) {
       print('Nenhum relatório encontrado.');
     } else {
       for (var r in resultados) {
-        print('--- Relatório ---');
+        print('Relátorio id: ${r['id']}');
         print('Descrição: ${r['descricao']}');
         print('Nível de dor: ${r['niveldor']}');
         print('Fadiga: ${r['fadiga']}');

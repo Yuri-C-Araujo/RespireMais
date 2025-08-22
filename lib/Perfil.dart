@@ -30,6 +30,17 @@ class _PerfilState extends State<Perfil>{
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(color: Colors.white.withOpacity(0.5)),
         ),
+
+          ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                CircleAvatar(
+                  radius: 120,
+                  backgroundColor: Colors.blue[50],
+                  child: Icon(Icons.person, size: 200, color: Colors.blue),
+                ),
+              ],
+          ),
         ],
       ),
     );

@@ -79,6 +79,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   controller: descricaoCont,
                   maxLines: 4,
                   decoration: InputDecoration(
+                    hintText: 'Fale como você está ultimamente, dificuldades, acontecimentos etc.',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
@@ -128,6 +129,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   Radio<String>(
                     value: 'Leve',
                     groupValue: fadiga,
+                    activeColor: Colors.blue,
                     onChanged: (valor) {
                       setState(() {
                         fadiga = valor;
@@ -142,6 +144,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   Radio<String>(
                     value: 'Moderada',
                     groupValue: fadiga,
+                    activeColor: Colors.blue,
                     onChanged: (valor) {
                       setState(() {
                         fadiga = valor;
@@ -155,6 +158,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   Radio<String>(
                     value: 'Intensa',
                     groupValue: fadiga,
+                    activeColor: Colors.blue,
                     onChanged: (valor) {
                       setState(() {
                         fadiga = valor;
@@ -177,6 +181,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                 children: [
                   Checkbox(
                     value: nausea,
+                    activeColor: Colors.blue,
                     onChanged: (bool? valor) {
                       setState(() {
                         nausea = valor ?? false;
@@ -189,6 +194,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   ),
                   Checkbox(
                     value: faltaDeAr,
+                    activeColor: Colors.blue,
                     onChanged: (bool? valor) {
                       setState(() {
                         faltaDeAr = valor ?? false;
@@ -201,6 +207,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   ),
                   Checkbox(
                     value: tosse,
+                    activeColor: Colors.blue,
                     onChanged: (bool? valor) {
                       setState(() {
                         tosse = valor ?? false;
@@ -233,9 +240,6 @@ class _RelatoriodiaState extends State<Relatoriodia> {
 
                   await RelatorioDao().salvarRelatorio(relatorio);
                   await RelatorioDao().listarEImprimirRelatorios();
-                  
-                  print("oii");
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Relatório salvo com sucesso!')),
                   );
