@@ -1,6 +1,18 @@
-import 'package:respire_mais/medicamento.dart';
 import 'package:flutter/material.dart';
+import 'medicamentos.dart';
 
 void main() {
-  runApp(const MaterialApp(home: Medicamento()));
+  runApp(RespireMaisApp());
+}
+
+class RespireMaisApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Respire Mais',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: MedicamentosPage(), // ⚡ Nome correto da tela
+    );
+  }
 }
