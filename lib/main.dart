@@ -12,7 +12,7 @@ class RespireMaisApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Respire Mais',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: MedicamentosPage(), // ⚡ Nome correto da tela
+      home: MedicamentosPage(),
     );
   }
 }

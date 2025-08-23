@@ -29,7 +29,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
   }
 
   // Modal para adicionar novo medicamento
-  Future<void> _abrirModalAdicionar() async {
+  Future<void> Adicionar() async {
     final novoMedicamento = await showDialog<Medicamento>(
       context: context,
       builder: (context) {
@@ -75,6 +75,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
           urlImagem: novoMedicamento.urlImagem,
         ));
       });
+      await dao.imprimirBanco();
     }
   }
 
@@ -90,7 +91,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(15),
         child: ElevatedButton(
-          onPressed: _abrirModalAdicionar,
+          onPressed: Adicionar,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

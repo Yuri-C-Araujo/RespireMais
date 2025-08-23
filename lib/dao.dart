@@ -13,6 +13,22 @@ class MedicamentoDao {
     final List<Map<String, dynamic>> resultado = await db.query('MEDICAMENTO');
     return resultado.map((json) => Medicamento.fromJson(json)).toList();
   }
+  Future<void> imprimirBanco() async {
+    final Database db = await DBHelper().initDB();
+    List<Map<String, dynamic>> resultados = await db.query('MEDICAMENTO');
+
+    if (resultados.isEmpty) {
+      print('Nenhum relatório encontrado.');
+    } else {
+      for (var r in resultados) {
+        print('ID: ${r['id']}');
+        print('Nome: ${r['nome']}');
+        print('Horário: ${r['horario']}');
+        print('URL: ${r['urlImagem']}');
+        print('-------------------------');
+      }
+    }
+  }
 
   Future<int> deletar(int id) async {
     final Database db = await DBHelper().initDB();

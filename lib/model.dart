@@ -1,5 +1,5 @@
 class Medicamento {
-  int? id;           // id gerado pelo banco
+  int? id;
   String nome;
   String horario;
   String urlImagem;
