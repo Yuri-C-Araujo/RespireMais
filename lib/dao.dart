@@ -4,21 +4,32 @@ import 'model.dart';
 
 class MedicamentoDao {
   Future<int> salvar(Medicamento med) async {
-    final Database db = await DBHelper().initDB();
-    return db.insert('MEDICAMENTO', med.toJson());
+    Database db = await DBHelper().initDB();
+    return await db.insert('MEDICAMENTOS', med.toJson());
   }
 
   Future<List<Medicamento>> listar() async {
-    final Database db = await DBHelper().initDB();
-    final List<Map<String, dynamic>> resultado = await db.query('MEDICAMENTO');
-    return resultado.map((json) => Medicamento.fromJson(json)).toList();
+    List<Medicamento> lista = [];
+    Database db = await DBHelper().initDB();
+
+    String sql = 'SELECT * FROM MEDICAMENTOS;';
+    var resultado = await db.rawQuery(sql);
+
+    for (var json in resultado) {
+      Medicamento med = Medicamento.fromJson(json);
+      lista.add(med);
+    }
+
+    return lista;
   }
+
   Future<void> imprimirBanco() async {
-    final Database db = await DBHelper().initDB();
-    List<Map<String, dynamic>> resultados = await db.query('MEDICAMENTO');
+    Database db = await DBHelper().initDB();
+    String sql = 'SELECT * FROM MEDICAMENTOS;';
+    var resultados = await db.rawQuery(sql);
 
     if (resultados.isEmpty) {
-      print('Nenhum relatório encontrado.');
+      print('Nenhum medicamento encontrado.');
     } else {
       for (var r in resultados) {
         print('ID: ${r['id']}');
@@ -31,7 +42,7 @@ class MedicamentoDao {
   }
 
   Future<int> deletar(int id) async {
-    final Database db = await DBHelper().initDB();
-    return db.delete('MEDICAMENTO', where: 'id = ?', whereArgs: [id]);
+    Database db = await DBHelper().initDB();
+    return await db.delete('MEDICAMENTOS', where: 'id = ?', whereArgs: [id]);
   }
 }

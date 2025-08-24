@@ -20,7 +20,6 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     carregarMedicamentos();
   }
 
-  // Carrega os medicamentos do banco e atualiza a tela
   carregarMedicamentos() async {
     final dados = await dao.listar();
     setState(() {
@@ -28,8 +27,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     });
   }
 
-  // Modal para adicionar novo medicamento
-  Future<void> Adicionar() async {
+  Future<void> adicionar() async {
     final novoMedicamento = await showDialog<Medicamento>(
       context: context,
       builder: (context) {
@@ -38,17 +36,17 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
         final urlCtrl = TextEditingController();
 
         return AlertDialog(
-          title: Text('Adicionar Medicamento'),
+          title: const Text('Adicionar Medicamento'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: nomeCtrl, decoration: InputDecoration(labelText: 'Nome')),
-              TextField(controller: horarioCtrl, decoration: InputDecoration(labelText: 'Horário')),
-              TextField(controller: urlCtrl, decoration: InputDecoration(labelText: 'URL da imagem')),
+              TextField(controller: nomeCtrl, decoration: const InputDecoration(labelText: 'Nome')),
+              TextField(controller: horarioCtrl, decoration: const InputDecoration(labelText: 'Horário')),
+              TextField(controller: urlCtrl, decoration: const InputDecoration(labelText: 'URL da imagem')),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, null), child: Text('Cancelar')),
+            TextButton(onPressed: () => Navigator.pop(context, null), child: const Text('Cancelar')),
             ElevatedButton(
               onPressed: () {
                 final med = Medicamento(
@@ -58,7 +56,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 );
                 Navigator.pop(context, med);
               },
-              child: Text('Salvar'),
+              child: const Text('Salvar'),
             ),
           ],
         );
@@ -87,54 +85,54 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(15),
-        child: ElevatedButton(
-          onPressed: Adicionar,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            fixedSize: Size(300, 60),
-          ),
-          child: Text(
-            'ADICIONAR MEDICAÇÃO',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 15),
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(15),
+          child: ElevatedButton(
+            onPressed: adicionar,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              fixedSize: const Size(300, 60),
+            ),
+            child: const Text(
+              'ADICIONAR MEDICAÇÃO',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 15),
+            ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: Opacity(
-              opacity: 0.4,
-              child: Image.asset(
-                'imagem/Logo-Respire.png',
-                width: 600,
-                height: 600,
-                fit: BoxFit.cover,
+        body: Stack(
+          children: [
+            Center(
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset(
+                  'imagem/Logo-Respire.png',
+                  width: 600,
+                  height: 600,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(color: Colors.transparent),
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(color: Colors.transparent),
+              ),
             ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(15),
+            Padding(
+              padding: const EdgeInsets.all(15),
               child: ListView(
                 children: [
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'MEDICAMENTOS',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -149,8 +147,8 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -166,12 +164,12 @@ class MedicamentoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 150,
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 2))],
+        boxShadow: [const BoxShadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 2))],
       ),
       child: Column(
         children: [
@@ -182,21 +180,21 @@ class MedicamentoCard extends StatelessWidget {
               height: 80,
               width: 100,
               fit: BoxFit.cover,
-              errorBuilder: (c, e, s) => Icon(Icons.image_not_supported),
+              errorBuilder: (c, e, s) => const Icon(Icons.image_not_supported),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
             medicamento.nome,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(
             medicamento.horario,
-            style: TextStyle(fontSize: 15, color: Colors.lightBlueAccent),
+            style: const TextStyle(fontSize: 15, color: Colors.lightBlueAccent),
           ),
           IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: onDelete,
           ),
         ],
