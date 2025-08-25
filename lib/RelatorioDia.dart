@@ -29,10 +29,7 @@ class _RelatoriodiaState extends State<Relatoriodia> {
             left: 0,
             right: 0,
             child: Center(
-              child: Image.asset(
-                'assets/Logo-Respire.png',
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('assets/Logo-Respire.png', fit: BoxFit.cover),
             ),
           ),
 
@@ -72,25 +69,35 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                 'COMO VOCÊ ESTÁ SE SENTINDO HOJE? ',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(8),
-                child: TextField(
-                  controller: descricaoCont,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Fale como você está ultimamente, dificuldades, acontecimentos etc.',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
+              Theme(
+                data: Theme.of(context).copyWith(
+                  textSelectionTheme: TextSelectionThemeData(
+                    selectionHandleColor: Colors.blue, // Cor da gotinha
+                  ),
+                ),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(8),
+                  child: TextField(
+                    controller: descricaoCont,
+                    maxLines: 4,
+                    cursorColor: Colors.blue,
+                    decoration: InputDecoration(
+                      hintText:
+                          'Fale como você está ultimamente, dificuldades, acontecimentos etc.',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
                   ),
                 ),
               ),
 
               SizedBox(height: 15),
+
               Text(
                 'NÍVEL DE DOR ',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
