@@ -32,162 +32,162 @@ class _CadastroState extends State<Cadastro> {
       ),
       body: SafeArea(
         child: ListView(
-        padding: EdgeInsets.all(15),
-        children: [
-          Center(
-            child: Text(
+          padding: EdgeInsets.all(15),
+          children: [
+            Center(
+              child: Text(
                 'CADASTRO',
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.blue,
-                fontWeight: FontWeight.w900
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            children: [
-              Text(
+            const SizedBox(height: 40),
+            Row(
+              children: [
+                Text(
                   'NOME COMPLETO',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w900
-                ),
-              )
-            ],
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(8),
-            child: TextField(
-              controller: nomeController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'E-MAIL',
-                style: TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
-                    fontWeight: FontWeight.w900
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              )
-            ],
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(8),
-            child: TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
+              ],
+            ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(8),
+              child: TextField(
+                controller: nomeController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                filled: true,
-                fillColor: Colors.white,
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'SENHA',
-                style: TextStyle(
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'E-MAIL',
+                  style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
-                    fontWeight: FontWeight.w900
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              )
-            ],
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(8),
-            child: TextField(
-              controller: senhaController,
-              obscureText: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
+              ],
+            ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(8),
+              child: TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                filled: true,
-                fillColor: Colors.white,
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'DATA DE NASCIMENTO',
-                style: TextStyle(
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'SENHA',
+                  style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
-                    fontWeight: FontWeight.w900
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              )
-            ],
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(8),
-            child: TextField(
-              controller: dataNascController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
+              ],
+            ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(8),
+              child: TextField(
+                controller: senhaController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                filled: true,
-                fillColor: Colors.white,
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                'O QUE VOCÊ SENTE?',
-                style: TextStyle(
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'DATA DE NASCIMENTO',
+                  style: TextStyle(
                     fontSize: 20,
                     color: Colors.black,
-                    fontWeight: FontWeight.w900
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              )
-            ],
-          ),
-          Material(
-            elevation: 10,
-            borderRadius: BorderRadius.circular(8),
-            child: TextField(
-              controller: oqSenteController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
+              ],
+            ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(8),
+              child: TextField(
+                controller: dataNascController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                filled: true,
-                fillColor: Colors.white,
               ),
             ),
-          ),
-          const SizedBox(height: 35),
-          Row(
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'O QUE VOCÊ SENTE?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+            Material(
+              elevation: 10,
+              borderRadius: BorderRadius.circular(8),
+              child: TextField(
+                controller: oqSenteController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 35),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
@@ -208,35 +208,35 @@ class _CadastroState extends State<Cadastro> {
 
                     await DadosUsuDao().salvar(dadosUsu);
                     await DadosUsuDao().listarCadastroUsuario();
-
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Cadastro efetuado com sucesso!')),
+                    );
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => Login()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.blue,
-                      minimumSize: Size(80, 50)
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.blue,
+                    minimumSize: Size(80, 50),
                   ),
                   child: Center(
                     child: Text(
                       'CADASTRE-SE',
                       style: TextStyle(
-                          fontSize: 23,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900
-
-
+                        fontSize: 23,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
                 ),
-              ]
-          )
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
-      )
     );
   }
 }

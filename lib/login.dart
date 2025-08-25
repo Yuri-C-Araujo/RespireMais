@@ -139,6 +139,9 @@ class _LoginState extends State<Login> {
                     bool auth = await DadosUsuDao().autenticacao(email, senha);
 
                     if (auth) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Login efetuado com sucesso!')),
+                      );
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -148,7 +151,9 @@ class _LoginState extends State<Login> {
                         ),
                       );
                     } else {
-                      print('E-mail e/ou senha incorretos!');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Usuário e/ou senha incorretos.')),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
