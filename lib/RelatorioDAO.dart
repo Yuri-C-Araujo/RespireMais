@@ -3,13 +3,10 @@ import 'DBHelper.dart';
 import 'relatorio.dart';
 
 class RelatorioDao {
-  // Salvar um relatório
+
   Future<void> salvarRelatorio(Relatorio relatorio) async {
     Database db = await DBHelper().initDB();
-    await db.insert(
-      'Relatorio',
-      relatorio.toJson(), // usa o método da classe Relatorio
-      conflictAlgorithm: ConflictAlgorithm.replace,
+    db.insert('Relatorio', relatorio.toJson(),
     );
   }
   Future<void> listarEImprimirRelatorios() async {
@@ -32,11 +29,4 @@ class RelatorioDao {
     }
   }
 
-  // Listar todos os relatórios
-  Future<List<Relatorio>> listarRelatorios() async {
-    Database db = await DBHelper().initDB();
-    List<Map<String, dynamic>> listResult = await db.query('Relatorio');
-
-    return listResult.map((json) => Relatorio.fromJson(json)).toList();
-  }
 }

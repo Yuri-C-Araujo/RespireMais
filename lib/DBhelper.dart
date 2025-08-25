@@ -5,9 +5,9 @@ import 'package:sqflite/sqflite.dart';
 class DBHelper {
   Future<Database> initDB() async {
     String path = await getDatabasesPath();
-    String dbName = 'relatorio.db'; // banco exclusivo para relatórios
+    String dbName = 'relatorio.db';
     String dbPath = join(path, dbName);
-    print("DB Path: $dbPath");
+    print(dbPath);
 
     var db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
     return db;
