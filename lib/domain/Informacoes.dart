@@ -4,7 +4,8 @@ class Informacoes{
   late String fadiga;
   late String efeitoColateral;
 
-  Informacoes ({ required this.datas,
+  Informacoes ({
+    required this.datas,
     required this.dor,
     required this.fadiga,
     required this.efeitoColateral,
