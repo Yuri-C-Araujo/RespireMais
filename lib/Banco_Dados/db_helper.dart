@@ -6,9 +6,9 @@ class DBHelper {
   Future<Database> initDB() async {
   String pach = await getDatabasesPath();
   String dbName = 'historico_db';
-  String dbPach = join(pach, dbName);
-  print(dbPach);
-  var db = await openDatabase(dbPach, version: 1, onCreate: onCreate);
+  String dbPath = join(pach, dbName);
+  print(dbPath);
+  var db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
   return db;
 }
 
@@ -25,7 +25,7 @@ Future<void> onCreate(Database db, int version) async {
 
   sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('12/05', '6/10', 'Moderada', 'Tosse')";
   await db.execute(sql);
-  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('11/05', '4/10', 'leve', '')";
+  sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('11/05', '4/10', 'Leve', '')";
   await db.execute(sql);
   sql = "INSERT INTO Informacoes (datas, dor, fadiga, efetColateral) VALUES ('10/05', '9/10', 'Intensa', 'Náusea')";
   await db.execute(sql);

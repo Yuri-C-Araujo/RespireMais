@@ -13,7 +13,7 @@ class Informacoes_dao {
 
   for (var json in listResult){
 
-   Informacoes informacoes = Informacoes.fromJson(json);
+    Informacoes informacoes = Informacoes.fromJson(json);
    listInformacoes.add(informacoes);
    }
   return listInformacoes;
