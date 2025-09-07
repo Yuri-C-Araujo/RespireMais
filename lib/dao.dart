@@ -2,13 +2,13 @@ import 'package:sqflite/sqflite.dart';
 import 'dbhelper.dart';
 import 'model.dart';
 
-class MedicamentoDao {
+class MedicamentoDao { //gerenciar todas as operações do banco relacionadas ao medicamento
   Future<int> salvar(Medicamento med) async {
     Database db = await DBHelper().initDB();
     return await db.insert('MEDICAMENTOS', med.toJson());
   }
 
-  Future<List<Medicamento>> listar() async {
+  Future<List<Medicamento>> listar() async { //retorna a lista
     List<Medicamento> lista = [];
     Database db = await DBHelper().initDB();
 
@@ -16,7 +16,8 @@ class MedicamentoDao {
     var resultado = await db.rawQuery(sql);
 
     for (var json in resultado) {
-      Medicamento med = Medicamento.fromJson(json);
+      Medicamento med = Medicamento.fromJson(json); //Converte cada linha do banco
+      // (json) em objeto Medicamento usando Medicamento.fromJson(json).
       lista.add(med);
     }
 

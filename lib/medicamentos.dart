@@ -11,43 +11,43 @@ class MedicamentosPage extends StatefulWidget {
 }
 
 class _MedicamentosPageState extends State<MedicamentosPage> {
-  final MedicamentoDao dao = MedicamentoDao();
-  List<Medicamento> lista = [];
+  final MedicamentoDao dao = MedicamentoDao(); //obejeto que acessa o banco
+  List<Medicamento> lista = []; //mantém os medicamentos que serão exibidos na tela.
 
   @override
-  void initState() {
+  void initState() { //Chamado uma vez quando o widget é criado.
     super.initState();
-    carregarMedicamentos();
+    carregarMedicamentos(); //Chama carregarMedicamentos() para pegar dados do banco e mostrar na tela
   }
 
   carregarMedicamentos() async {
-    final dados = await dao.listar();
-    setState(() {
+    final dados = await dao.listar(); //busca os medicamentos no banco
+    setState(() { //atualiza a interface mostrando a lista na tela.
       lista = dados;
     });
   }
 
-  Future<void> adicionar() async {
+  Future<void> adicionar() async { //Mostra um diálogo para o usuário digitar dados.
     final novoMedicamento = await showDialog<Medicamento>(
       context: context,
       builder: (context) {
-        final nomeCtrl = TextEditingController();
-        final horarioCtrl = TextEditingController();
-        final urlCtrl = TextEditingController();
+        final nomeCtrl = TextEditingController(); //controla os campos de texto.
+        final horarioCtrl = TextEditingController(); //controla os campos de texto.
+        final urlCtrl = TextEditingController(); //controla os campos de texto.
 
         return AlertDialog(
-          title: const Text('Adicionar Medicamento'),
+          title: Text('Adicionar Medicamento'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: nomeCtrl, decoration: const InputDecoration(labelText: 'Nome')),
-              TextField(controller: horarioCtrl, decoration: const InputDecoration(labelText: 'Horário')),
-              TextField(controller: urlCtrl, decoration: const InputDecoration(labelText: 'URL da imagem')),
+              TextField(controller: nomeCtrl, decoration: InputDecoration(labelText: 'Nome')),
+              TextField(controller: horarioCtrl, decoration: InputDecoration(labelText: 'Horário')),
+              TextField(controller: urlCtrl, decoration: InputDecoration(labelText: 'URL da imagem')),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, null), child: const Text('Cancelar')),
-            ElevatedButton(
+            TextButton(onPressed: () => Navigator.pop(context, null), child: Text('Cancelar')),
+            ElevatedButton( //cria o objeto com os dados fornecidos pelo usuario
               onPressed: () {
                 final med = Medicamento(
                   nome: nomeCtrl.text,
@@ -56,14 +56,14 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 );
                 Navigator.pop(context, med);
               },
-              child: const Text('Salvar'),
+              child: Text('Salvar'),
             ),
           ],
         );
       },
     );
 
-    if (novoMedicamento != null) {
+    if (novoMedicamento != null) { //verifica se o usuario salvou
       int id = await dao.salvar(novoMedicamento); // Salva no banco e pega o ID
       setState(() {
         lista.add(Medicamento(
@@ -77,8 +77,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     }
   }
 
-  // Deleta medicamento
-  deletarMedicamento(int id) async {
+  deletarMedicamento(int id) async {   //Deleta medicamento
     await dao.deletar(id);
     carregarMedicamentos(); // Atualiza a lista após deletar
   }
@@ -88,16 +87,16 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: EdgeInsets.all(15),
           child: ElevatedButton(
             onPressed: adicionar,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              fixedSize: const Size(300, 60),
+              fixedSize: Size(300, 60),
             ),
-            child: const Text(
+            child: Text(
               'ADICIONAR MEDICAÇÃO',
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 15),
             ),
@@ -123,16 +122,16 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(15),
+              padding: EdgeInsets.all(15),
               child: ListView(
                 children: [
-                  const SizedBox(height: 20),
-                  const Text(
+                  SizedBox(height: 20),
+                  Text(
                     'MEDICAMENTOS',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
@@ -158,18 +157,18 @@ class MedicamentoCard extends StatelessWidget {
   final Medicamento medicamento;
   final VoidCallback onDelete;
 
-  const MedicamentoCard({required this.medicamento, required this.onDelete, super.key});
+  const MedicamentoCard({required this.medicamento, required this.onDelete, super.key}); //evitar recriação desnecessarias
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 150,
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(8),
+      margin: EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [const BoxShadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 2))],
+        boxShadow: [ BoxShadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 2))],
       ),
       child: Column(
         children: [
@@ -180,21 +179,21 @@ class MedicamentoCard extends StatelessWidget {
               height: 80,
               width: 100,
               fit: BoxFit.cover,
-              errorBuilder: (c, e, s) => const Icon(Icons.image_not_supported),
+              errorBuilder: (c, e, s) =>  Icon(Icons.image_not_supported),
             ),
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: 20),
           Text(
             medicamento.nome,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
           ),
-          const SizedBox(height: 5),
+           SizedBox(height: 5),
           Text(
             medicamento.horario,
-            style: const TextStyle(fontSize: 15, color: Colors.lightBlueAccent),
+            style: TextStyle(fontSize: 15, color: Colors.lightBlueAccent),
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon: Icon(Icons.delete, color: Colors.red),
             onPressed: onDelete,
           ),
         ],
