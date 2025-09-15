@@ -9,14 +9,14 @@
       }
 
     Future<List<Medicamento>> listar() async {
-      List<Medicamento> lista = []; //cria lista
+      List<Medicamento> lista = [];
       Database db = await DBHelper().initDB();
 
-      String sql = 'SELECT * FROM MEDICAMENTOS;'; //escreve a consulta SQL
-      var resultado = await db.rawQuery(sql); // Executa a consulta e pega os resultados
+      String sql = 'SELECT * FROM MEDICAMENTOS;';
+      var resultado = await db.rawQuery(sql);
 
       for (var json in resultado) {
-        Medicamento med = Medicamento.fromJson(json); // Converte cada linha em objeto
+        Medicamento med = Medicamento.fromJson(json);
         lista.add(med);
       }
       return lista;

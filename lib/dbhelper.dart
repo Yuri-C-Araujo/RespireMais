@@ -7,7 +7,7 @@ class DBHelper {
     String path = await getDatabasesPath();
     String dbName = 'medicamentos.db';
     String dbPath = join(path, dbName);
-    print(dbPath);
+    print('Caminho do banco: $dbPath');
     Database db = await openDatabase(dbPath, version: 1, onCreate: onCreate);
     return db;
   }
@@ -21,7 +21,6 @@ class DBHelper {
         urlImagem TEXT NOT NULL
       );
     ''';
-
     await db.execute(sql);
   }
 }
