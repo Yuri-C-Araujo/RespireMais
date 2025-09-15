@@ -12,7 +12,7 @@ class Relatoriodia extends StatefulWidget {
 }
 
 class _RelatoriodiaState extends State<Relatoriodia> {
-  double niveldor = 5;
+  double niveldor = 0;
   String? fadiga;
   bool nausea = false;
   bool faltaDeAr = false;

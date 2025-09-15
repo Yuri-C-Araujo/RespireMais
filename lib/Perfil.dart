@@ -13,7 +13,8 @@ class _PerfilState extends State<Perfil> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
       body: Stack(
         children: [
           Positioned(
@@ -74,19 +75,16 @@ class _PerfilState extends State<Perfil> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Text(
-                        "Levi Soares",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    "Levi Soares Passos",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromRGBO(0, 51, 102, 50),
+                      fontWeight: FontWeight.w900,
                     ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -113,19 +111,16 @@ class _PerfilState extends State<Perfil> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Text(
-                        "*****",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    "*******",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromRGBO(0, 51, 102, 50),
+                      fontWeight: FontWeight.w900,
                     ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -152,19 +147,16 @@ class _PerfilState extends State<Perfil> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Center(
-                      child: Text(
-                        "Cancer de pulmão",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    "Cancer de Pulmão",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromRGBO(0, 51, 102, 50),
+                      fontWeight: FontWeight.w900,
                     ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -174,31 +166,65 @@ class _PerfilState extends State<Perfil> {
                 "NOTIFICAÇÕES ",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
+              SizedBox(height: 10),
 
               Align(
-                alignment: AlignmentGeometry.centerLeft,
-                child:
-              Transform.scale(
-                scale: 1.5,
-                child: Switch(
-                  value: notificacaoAtiva,
-                  onChanged: (bool valor) {
-                    setState(() {
-                      notificacaoAtiva = valor;
-                    });
-                    print("Notificações ${valor ? 'ativadas' : 'desativadas'}");
-                  },
-                  activeColor: Colors.blue,
-                  inactiveThumbColor: Colors.blue,
-                  inactiveTrackColor: Colors.white,
-                  padding: EdgeInsets.only(left: 27),
+                alignment: AlignmentDirectional.centerStart,
+                child: Transform.scale(
+                  scale: 1.7,
+                  child: Switch(
+                    value: notificacaoAtiva,
+                    onChanged: (bool valor) {
+                      setState(() {
+                        notificacaoAtiva = valor;
+                      });
+                      print(
+                        "Notificações ${valor ? 'ativadas' : 'desativadas'}",
+                      );
+                    },
 
+                    inactiveThumbColor: Colors.blue,
+                    inactiveTrackColor: Colors.white,
+                    activeTrackColor: Colors.blue,
+
+                    padding: EdgeInsets.only(left: 27),
+                  ),
                 ),
               ),
+
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(width: 100),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: Size(170, 60)
+                    ),
+                    child: Text(
+                      "SAIR",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 100),
+                ],
               ),
             ],
           ),
         ],
+      ),
       ),
     );
   }
