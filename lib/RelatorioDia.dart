@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:respire_mais/RelatorioDAO.dart';
 import 'package:respire_mais/relatorio.dart';
+import 'ConfirmarSalvamento.dart';
 
 class Relatoriodia extends StatefulWidget {
   const Relatoriodia({super.key});
@@ -232,24 +233,41 @@ class _RelatoriodiaState extends State<Relatoriodia> {
 
               ElevatedButton(
                 onPressed: () async {
-                  String descricao = descricaoCont.text;
-                  String data = DateTime.now().toIso8601String();
-
-                  Relatorio relatorio = Relatorio(
-                    descricao: descricao,
-                    niveldor: niveldor,
-                    fadiga: fadiga,
-                    nausea: nausea,
-                    faltaDeAr: faltaDeAr,
-                    tosse: tosse,
-                    data: data,
+                  bool? confirmar = await Navigator.of(context).push(
+                    PageRouteBuilder(
+                      opaque: false,
+                      barrierDismissible: false,
+                      pageBuilder: (_, __, ___) => const ConfirmarSalvamento(),
+                    ),
                   );
 
-                  await RelatorioDao().salvarRelatorio(relatorio);
-                  await RelatorioDao().listarEImprimirRelatorios();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Relatório salvo com sucesso!')),
-                  );
+                  if (confirmar == true) {
+                    String descricao = descricaoCont.text;
+                    String data = DateTime.now().toIso8601String();
+
+                    Relatorio relatorio = Relatorio(
+                      descricao: descricao,
+                      niveldor: niveldor,
+                      fadiga: fadiga,
+                      nausea: nausea,
+                      faltaDeAr: faltaDeAr,
+                      tosse: tosse,
+                      data: data,
+                    );
+
+                    await RelatorioDao().salvarRelatorio(relatorio);
+                    await RelatorioDao().listarEImprimirRelatorios();
+
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Relatório salvo com sucesso!')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Operação cancelada')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
