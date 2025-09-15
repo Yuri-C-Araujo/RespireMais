@@ -11,43 +11,44 @@ class MedicamentosPage extends StatefulWidget {
 }
 
 class _MedicamentosPageState extends State<MedicamentosPage> {
-  final MedicamentoDao dao = MedicamentoDao(); //obejeto que acessa o banco
-  List<Medicamento> lista = []; //mantém os medicamentos que serão exibidos na tela.
+  final MedicamentoDao dao = MedicamentoDao();
+  List<Medicamento> lista = [];
 
   @override
-  void initState() { //Chamado uma vez quando o widget é criado.
+  void initState() {
     super.initState();
-    carregarMedicamentos(); //Chama carregarMedicamentos() para pegar dados do banco e mostrar na tela
+    carregarMedicamentos();
   }
 
   carregarMedicamentos() async {
-    final dados = await dao.listar(); //busca os medicamentos no banco
-    setState(() { //atualiza a interface mostrando a lista na tela.
+    final dados = await dao.listar();
+    setState(() {
       lista = dados;
     });
   }
 
-  Future<void> adicionar() async { //Mostra um diálogo para o usuário digitar dados.
+  Future<void> adicionar() async {
     final novoMedicamento = await showDialog<Medicamento>(
       context: context,
       builder: (context) {
-        final nomeCtrl = TextEditingController(); //controla os campos de texto.
-        final horarioCtrl = TextEditingController(); //controla os campos de texto.
-        final urlCtrl = TextEditingController(); //controla os campos de texto.
+        final nomeCtrl = TextEditingController();
+        final horarioCtrl = TextEditingController();
+        final urlCtrl = TextEditingController();
 
-        return AlertDialog(
-          title: Text('Adicionar Medicamento'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(controller: nomeCtrl, decoration: InputDecoration(labelText: 'Nome')),
-              TextField(controller: horarioCtrl, decoration: InputDecoration(labelText: 'Horário')),
-              TextField(controller: urlCtrl, decoration: InputDecoration(labelText: 'URL da imagem')),
-            ],
-          ),
+          return AlertDialog(
+            title: Text('Adicionar Medicamento'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(controller: nomeCtrl, decoration: InputDecoration(labelText: 'Nome')),
+                TextField(controller: horarioCtrl, decoration: InputDecoration(labelText: 'Horário')),
+                TextField(controller: urlCtrl, decoration: InputDecoration(labelText: 'URL da imagem')),
+              ],
+            ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, null), child: Text('Cancelar')),
-            ElevatedButton( //cria o objeto com os dados fornecidos pelo usuario
+            TextButton(onPressed: () => Navigator.pop(context, null),
+                child: Text('Cancelar')),
+            ElevatedButton(
               onPressed: () {
                 final med = Medicamento(
                   nome: nomeCtrl.text,
@@ -63,8 +64,8 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
       },
     );
 
-    if (novoMedicamento != null) { //verifica se o usuario salvou
-      int id = await dao.salvar(novoMedicamento); // Salva no banco e pega o ID
+    if (novoMedicamento != null) {
+      int id = await dao.salvar(novoMedicamento);
       setState(() {
         lista.add(Medicamento(
           id: id,
@@ -77,9 +78,9 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     }
   }
 
-  deletarMedicamento(int id) async {   //Deleta medicamento
+  deletarMedicamento(int id) async {
     await dao.deletar(id);
-    carregarMedicamentos(); // Atualiza a lista após deletar
+    carregarMedicamentos();
   }
 
   @override
@@ -157,7 +158,7 @@ class MedicamentoCard extends StatelessWidget {
   final Medicamento medicamento;
   final VoidCallback onDelete;
 
-  const MedicamentoCard({required this.medicamento, required this.onDelete, super.key}); //evitar recriação desnecessarias
+  const MedicamentoCard({required this.medicamento, required this.onDelete, super.key});
 
   @override
   Widget build(BuildContext context) {
