@@ -162,42 +162,41 @@ class MedicamentoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [ BoxShadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 2))],
-      ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              medicamento.urlImagem,
-              height: 80,
-              width: 100,
-              fit: BoxFit.cover,
-              errorBuilder: (c, e, s) =>  Icon(Icons.image_not_supported),
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                medicamento.urlImagem,
+                height: 80,
+                width: 80,
+                fit: BoxFit.cover,
+                errorBuilder: (c, e, s) => Icon(Icons.image_not_supported, size: 40),
+              ),
             ),
-          ),
-           SizedBox(height: 20),
-          Text(
-            medicamento.nome,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
-          ),
-           SizedBox(height: 5),
-          Text(
-            medicamento.horario,
-            style: TextStyle(fontSize: 15, color: Colors.lightBlueAccent),
-          ),
-          IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
-            onPressed: onDelete,
-          ),
-        ],
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(medicamento.nome, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue[800])),
+                  SizedBox(height: 5),
+                  Text(medicamento.horario, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: onDelete,
+            ),
+          ],
+        ),
       ),
     );
   }
