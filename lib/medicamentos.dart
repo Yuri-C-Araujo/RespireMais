@@ -124,29 +124,30 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
             ),
             Padding(
               padding: EdgeInsets.all(15),
-              child: ListView(
+              child: Column(
                 children: [
+                  Text('Medicamentos', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[800]),),
                   SizedBox(height: 20),
-                  Text(
-                    'MEDICAMENTOS',
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.blue),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    alignment: WrapAlignment.center,
-                    children: lista.map((med) {
-                      return MedicamentoCard(
-                        medicamento: med,
-                        onDelete: () => deletarMedicamento(med.id!),
-                      );
-                    }).toList(),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          alignment: WrapAlignment.center,
+                          children: lista.map((med) {
+                            return MedicamentoCard(
+                              medicamento: med,
+                              onDelete: () => deletarMedicamento(med.id!),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -185,7 +186,7 @@ class MedicamentoCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(medicamento.nome, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue[800])),
+                  Text(medicamento.nome, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
                   SizedBox(height: 5),
                   Text(medicamento.horario, style: TextStyle(fontSize: 14, color: Colors.grey)),
                 ],
