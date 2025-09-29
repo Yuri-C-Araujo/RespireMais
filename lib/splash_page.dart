@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// Certifique-se de que estes imports correspondem ao seu projeto
 import 'package:respire_mais/db/shared_prefs.dart';
 import 'package:respire_mais/login.dart';
 import 'package:respire_mais/menu.dart';
@@ -10,27 +11,54 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
+  // --- Vamos definir as durações aqui para fácil ajuste ---
+  static const int tempoDeRespiracao = 2; // Segundos para inspirar (ou expirar)
+  static const int tempoTotalDaTela = 4; // Segundos totais que a splash fica visível
+
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      // Usando a constante que definimos
+      duration: const Duration(seconds: tempoDeRespiracao),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _animationController.repeat(reverse: true);
+
     checkUserLogin();
   }
 
-  checkUserLogin() async {
-    // Aguarda 3 segundos para mostrar a splash
-    await Future.delayed(Duration(seconds: 3));
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
+  checkUserLogin() async {
+    // Usando a constante de tempo total. Agora ele vai esperar 4 segundos.
+    await Future.delayed(const Duration(seconds: tempoTotalDaTela));
+
+    // O resto da lógica continua igual
     bool isLoggedIn = await SharedPrefs().getUserStatus();
 
-    if (mounted) { // Verifica se o widget ainda está na árvore de widgets
+    if (mounted) {
       if (isLoggedIn) {
-        // Se estiver logado, vai para o Menu
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) => Menu(),
         ));
       } else {
-        // Se não, vai para o Login
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) => Login(),
         ));
@@ -41,16 +69,19 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Cor de fundo do seu app
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
-            Image.asset('assets/respireMais-unscreen.gif', height: 350),
-            Spacer(),
-            CircularProgressIndicator(
-              backgroundColor: Colors.grey[200],
+            const Spacer(),
+            ScaleTransition(
+              scale: _scaleAnimation,
+              child: Image.asset('assets/Logo-Respire.png', height: 350),
+            ),
+            const Spacer(),
+            const CircularProgressIndicator(
+              backgroundColor: Color(0xFFE0E0E0),
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
             const SizedBox(height: 64),
