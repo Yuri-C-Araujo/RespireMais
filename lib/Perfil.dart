@@ -10,7 +10,8 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   bool notificacaoAtiva = true;
-
+  bool _mostrarSenha = false;
+  String senha = "minhasenha123";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -112,15 +113,30 @@ class _PerfilState extends State<Perfil> {
                   ],
                 ),
                 child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "*******",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromRGBO(0, 51, 102, 50),
-                      fontWeight: FontWeight.w900,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _mostrarSenha ? senha : "*******",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(0, 51, 102, 1),
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            _mostrarSenha ? Icons.visibility : Icons.visibility_off,
+                            color: Colors.blue
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _mostrarSenha = !_mostrarSenha;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                  ),
                 ),
               ),
 
