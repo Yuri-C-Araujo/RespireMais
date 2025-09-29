@@ -2,6 +2,7 @@ import 'package:respire_mais/db/DadosUsu_dao.dart';
 import 'package:respire_mais/menu.dart';
 import 'package:respire_mais/cadastro.dart' show Cadastro;
 import 'package:flutter/material.dart';
+import 'package:respire_mais/db/shared_prefs.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -139,6 +140,8 @@ class _LoginState extends State<Login> {
                     bool auth = await DadosUsuDao().autenticacao(email, senha);
 
                     if (auth) {
+                      await SharedPrefs().saveUserStatus(true);
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Login efetuado com sucesso!')),
                       );
