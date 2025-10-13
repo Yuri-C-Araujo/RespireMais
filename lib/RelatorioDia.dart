@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:respire_mais/Loading_page.dart';
 import 'dart:ui';
-import 'package:respire_mais/RelatorioDAO.dart';
+import 'package:respire_mais/db/RelatorioDAO.dart';
 import 'package:respire_mais/relatorio.dart';
-import 'ConfirmarSalvamento.dart';
+import 'db/ConfirmarSalvamento.dart';
 
 class Relatoriodia extends StatefulWidget {
   const Relatoriodia({super.key});
@@ -242,6 +243,14 @@ class _RelatoriodiaState extends State<Relatoriodia> {
                   );
 
                   if (confirmar == true) {
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        opaque: false,
+                        barrierDismissible: false,
+                        pageBuilder: (_, __, ___) => const LoadingPage(),
+                      ),
+                    );
+
                     String descricao = descricaoCont.text;
                     String data = DateTime.now().toIso8601String();
 
@@ -257,6 +266,10 @@ class _RelatoriodiaState extends State<Relatoriodia> {
 
                     await RelatorioDao().salvarRelatorio(relatorio);
                     await RelatorioDao().listarEImprimirRelatorios();
+
+                    await Future.delayed(const Duration(seconds: 4));
+
+                    Navigator.pop(context);
 
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
