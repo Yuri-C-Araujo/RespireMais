@@ -1,9 +1,8 @@
 import 'package:respire_mais/db/DadosUsu_dao.dart';
 import 'package:respire_mais/domain/DadosUsu.dart';
-
 import 'package:flutter/material.dart';
 import 'package:respire_mais/login.dart';
-import 'package:respire_mais/menu.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Cadastro extends StatefulWidget {
   const Cadastro({super.key});
@@ -18,12 +17,60 @@ class _CadastroState extends State<Cadastro> {
   TextEditingController senhaController = TextEditingController();
   TextEditingController dataNascController = TextEditingController();
   TextEditingController oqSenteController = TextEditingController();
+  bool _isLoading = false;
+
+  final maskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+
+  void _fazerCadastro() async {
+    // ... (sua função _fazerCadastro continua a mesma)
+    FocusScope.of(context).unfocus();
+    if (nomeController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        senhaController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha nome, e-mail e senha.'),
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    await Future.delayed(const Duration(seconds: 1));
+    DadosUsu dadosUsu = DadosUsu(
+      nome: nomeController.text.trim(),
+      email: emailController.text.trim(),
+      senha: senhaController.text.trim(),
+      dataNasc: dataNascController.text.trim(),
+      oqSente: oqSenteController.text.trim(),
+    );
+    await DadosUsuDao().salvar(dadosUsu);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Cadastro efetuado com sucesso!')),
+    );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Login()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Dica: Crie uma decoração base para reutilizar
+    const inputDecorationAzul = InputDecoration(
+      floatingLabelStyle: TextStyle(color: Colors.blue),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.blue, width: 2.0),
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         toolbarHeight: 40,
         backgroundColor: Colors.white,
@@ -32,9 +79,9 @@ class _CadastroState extends State<Cadastro> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           children: [
-            Center(
+            const Center(
               child: Text(
                 'CADASTRO',
                 style: TextStyle(
@@ -44,195 +91,69 @@ class _CadastroState extends State<Cadastro> {
                 ),
               ),
             ),
-            const SizedBox(height: 40),
-            Row(
-              children: [
-                Text(
-                  'NOME COMPLETO',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: nomeController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  'E-MAIL',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
+            TextFormField(
+              controller: nomeController,
+              cursorColor: Colors.blue,
+              // Reutilizando o estilo e adicionando o labelText
+              decoration: inputDecorationAzul.copyWith(
+                labelText: 'Nome Completo',
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  'SENHA',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: emailController,
+              cursorColor: Colors.blue,
+              decoration: inputDecorationAzul.copyWith(labelText: 'E-mail'),
             ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: senhaController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: senhaController,
+              obscureText: true,
+              cursorColor: Colors.blue,
+              decoration: inputDecorationAzul.copyWith(labelText: 'Senha'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: dataNascController,
+              inputFormatters: [maskFormatter],
+              keyboardType: TextInputType.number,
+              cursorColor: Colors.blue,
+              decoration: inputDecorationAzul.copyWith(
+                labelText: 'Data de Nascimento',
+                hintText: 'DD/MM/AAAA',
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  'DATA DE NASCIMENTO',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: dataNascController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: oqSenteController,
+              cursorColor: Colors.blue,
+              decoration: inputDecorationAzul.copyWith(
+                labelText: 'O que você sente?',
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  'O QUE VOCÊ SENTE?',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: oqSenteController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
+            const SizedBox(height: 32),
+            // ... (resto do seu código do botão)
+            ElevatedButton(
+              onPressed: _isLoading ? null : _fazerCadastro,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(80, 50),
               ),
-            ),
-            const SizedBox(height: 35),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    String nome = nomeController.text.trim();
-                    String email = emailController.text.trim();
-                    String senha = senhaController.text.trim();
-                    String dataNasc = dataNascController.text.trim();
-                    String oqSente = oqSenteController.text.trim();
-
-                    DadosUsu dadosUsu = DadosUsu(
-                      nome: nome,
-                      email: email,
-                      senha: senha,
-                      dataNasc: dataNasc,
-                      oqSente: oqSente,
-                    );
-
-                    await DadosUsuDao().salvar(dadosUsu);
-                    await DadosUsuDao().listarCadastroUsuario();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Cadastro efetuado com sucesso!')),
-                    );
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.blue,
-                    minimumSize: Size(80, 50),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'CADASTRE-SE',
-                      style: TextStyle(
-                        fontSize: 23,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              child: Center(
+                child:
+                    _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                          'CADASTRE-SE',
+                          style: TextStyle(
+                            fontSize: 23,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+              ),
             ),
           ],
         ),

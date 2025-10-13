@@ -33,6 +33,8 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences:
+  mask_text_input_formatter: ^2.9.0
+  dio:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-// Certifique-se de que estes imports correspondem ao seu projeto
 import 'package:respire_mais/db/shared_prefs.dart';
 import 'package:respire_mais/login.dart';
-import 'package:respire_mais/menu.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -15,7 +13,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
-  // --- Vamos definir as durações aqui para fácil ajuste ---
   static const int tempoDeRespiracao = 2; // Segundos para inspirar (ou expirar)
   static const int tempoTotalDaTela = 4; // Segundos totais que a splash fica visível
 
@@ -24,7 +21,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      // Usando a constante que definimos
       duration: const Duration(seconds: tempoDeRespiracao),
     );
 
@@ -47,16 +43,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 
   checkUserLogin() async {
-    // Usando a constante de tempo total. Agora ele vai esperar 4 segundos.
     await Future.delayed(const Duration(seconds: tempoTotalDaTela));
 
-    // O resto da lógica continua igual
     bool isLoggedIn = await SharedPrefs().getUserStatus();
 
     if (mounted) {
       if (isLoggedIn) {
         Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Menu(),
+          builder: (context) => Login(),
         ));
       } else {
         Navigator.pushReplacement(context, MaterialPageRoute(
@@ -77,7 +71,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             const Spacer(),
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Image.asset('assets/Logo-Respire.png', height: 350),
+              child: Image.asset('assets/Logo-Respire-Carregamento.png', height: 150),
             ),
             const Spacer(),
             const CircularProgressIndicator(

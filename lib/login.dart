@@ -14,12 +14,43 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
+  bool _isLoading = false;
+
+  void _fazerLogin() async {
+    // ... (sua função _fazerLogin continua a mesma)
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _isLoading = true;
+    });
+    String email = emailController.text.trim();
+    String senha = senhaController.text.trim();
+    await Future.delayed(const Duration(seconds: 1));
+    bool auth = await DadosUsuDao().autenticacao(email, senha);
+    if (!mounted) return;
+    if (auth) {
+      await SharedPrefs().saveUserStatus(true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return Menu();
+          },
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuário e/ou senha incorretos.')),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         toolbarHeight: 50,
         backgroundColor: Colors.white,
@@ -28,14 +59,14 @@ class _LoginState extends State<Login> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: [
             Center(
               heightFactor: 0.5,
               child: Image.asset('assets/Logo-Respire.png', height: 350),
             ),
             const SizedBox(height: 20),
-            Center(
+            const Center(
               child: Text(
                 'LOGIN',
                 style: TextStyle(
@@ -45,137 +76,77 @@ class _LoginState extends State<Login> {
                 ),
               ),
             ),
-            const SizedBox(height: 35),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'E-MAIL:',
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'SENHA:',
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Material(
-              elevation: 10,
-              borderRadius: BorderRadius.circular(8),
-              child: TextField(
-                controller: senhaController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
+            TextFormField(
+              controller: emailController,
+              // Adicionando a cor do cursor
+              cursorColor: Colors.blue,
+              decoration: const InputDecoration(
+                labelText: 'E-mail',
+                // Estilo do rótulo quando está "flutuando"
+                floatingLabelStyle: TextStyle(color: Colors.blue),
+                // Borda quando o campo está focado (selecionado)
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            Center(
-              child: InkWell(
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Cadastro();
-                      },
-                    ),
-                  );
-                },
-                child: Text(
-                  'CADASTRE-SE',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w900,
-                    decoration: TextDecoration.underline,
-                  ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: senhaController,
+              obscureText: true,
+              // Adicionando a cor do cursor
+              cursorColor: Colors.blue,
+              decoration: const InputDecoration(
+                labelText: 'Senha',
+                // Estilo do rótulo quando está "flutuando"
+                floatingLabelStyle: TextStyle(color: Colors.blue),
+                // Borda quando o campo está focado (selecionado)
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
               ),
             ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    String email = emailController.text.trim();
-                    String senha = senhaController.text.trim();
-
-                    bool auth = await DadosUsuDao().autenticacao(email, senha);
-
-                    if (auth) {
-                      await SharedPrefs().saveUserStatus(true);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Login efetuado com sucesso!')),
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Menu();
-                          },
+            const SizedBox(height: 32),
+            // ... (resto do seu código do botão e texto)
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Cadastro()),
+                );
+              },
+              child: const Text(
+                'Não possui conta? Cadastre-se!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _isLoading ? null : _fazerLogin,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(90, 60),
+              ),
+              child: Center(
+                child:
+                    _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                          'LOGIN',
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Usuário e/ou senha incorretos.')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.blue,
-                    minimumSize: Size(90, 60),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'LOGIN',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
