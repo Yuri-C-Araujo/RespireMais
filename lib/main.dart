@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'medicamentos.dart';
+import 'splash_page.dart';
 
 void main() {
   runApp(const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MedicamentosPage()
-
+      home: SplashPage()
   ));
 }
