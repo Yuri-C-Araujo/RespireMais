@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:respire_mais/Loading_page.dart';
 import 'dart:ui';
 import 'package:respire_mais/db/RelatorioDAO.dart';
-import 'package:respire_mais/relatorio.dart';
+import 'package:respire_mais/domain/relatorio.dart';
 import 'db/ConfirmarSalvamento.dart';
 
 class Relatoriodia extends StatefulWidget {

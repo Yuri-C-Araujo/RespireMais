@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
@@ -12,107 +14,124 @@ class _PerfilState extends State<Perfil> {
   bool notificacaoAtiva = true;
   bool _mostrarSenha = false;
   String senha = "minhasenha123";
+  File? _imagemSelecionada;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Image.asset('assets/Logo-Respire.png', fit: BoxFit.cover),
+        body: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Image.asset(
+                  'assets/Logo-Respire.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
 
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Container(color: Colors.white.withOpacity(0.5)),
-          ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(color: Colors.white.withOpacity(0.5)),
+            ),
 
-          ListView(
-            padding: EdgeInsets.all(16),
-            children: [
-              CircleAvatar(
-                radius: 80,
-                backgroundColor: Colors.blue[50],
-                child: Icon(Icons.person, size: 150, color: Colors.blue),
-              ),
-
-              SizedBox(height: 20),
-
-              Center(
-                child: Text(
-                  "PERFIL",
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+            ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                GestureDetector(
+                  onTap: _mostrarOpcoesEscolha, // Chama a função ao clicar
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundColor: Colors.blue[50],
+                    // Mostra a imagem selecionada (se houver)
+                    // backgroundImage é melhor para File
+                    backgroundImage:
+                        _imagemSelecionada != null
+                            ? FileImage(_imagemSelecionada!)
+                            : null,
+                    // Mostra o ícone apenas se nenhuma imagem foi selecionada
+                    child:
+                        _imagemSelecionada == null
+                            ? Icon(Icons.person, size: 150, color: Colors.blue)
+                            : null,
                   ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "NOME DO USUÁRIO: ",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+                SizedBox(height: 20),
 
-              Container(
-                width: 450,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 6,
-                      offset: Offset(2, 5),
-                    ),
-                  ],
-                ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
+                Center(
                   child: Text(
-                    "Levi Soares Passos",
+                    "PERFIL",
                     style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromRGBO(0, 51, 102, 50),
-                      fontWeight: FontWeight.w900,
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
-              ),
-
-              SizedBox(height: 20),
-
-              Text(
-                "SENHA: ",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-
-              Container(
-                width: 450,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 6,
-                      offset: Offset(2, 5),
-                    ),
-                  ],
+                SizedBox(height: 20),
+                Text(
+                  "NOME DO USUÁRIO: ",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
-                child: Align(
+
+                Container(
+                  width: 450,
+                  height: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 6,
+                        offset: Offset(2, 5),
+                      ),
+                    ],
+                  ),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      "Levi Soares Passos",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromRGBO(0, 51, 102, 50),
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                Text(
+                  "SENHA: ",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+
+                Container(
+                  width: 450,
+                  height: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 6,
+                        offset: Offset(2, 5),
+                      ),
+                    ],
+                  ),
+                  child: Align(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -126,8 +145,10 @@ class _PerfilState extends State<Perfil> {
                         ),
                         IconButton(
                           icon: Icon(
-                            _mostrarSenha ? Icons.visibility : Icons.visibility_off,
-                            color: Colors.blue
+                            _mostrarSenha
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.blue,
                           ),
                           onPressed: () {
                             setState(() {
@@ -137,111 +158,152 @@ class _PerfilState extends State<Perfil> {
                         ),
                       ],
                     ),
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 20),
+                SizedBox(height: 20),
 
-              Text(
-                "DIAGNÓSTICO: ",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+                Text(
+                  "DIAGNÓSTICO: ",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
 
-              Container(
-                width: 450,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 6,
-                      offset: Offset(2, 5),
+                Container(
+                  width: 450,
+                  height: 50,
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 6,
+                        offset: Offset(2, 5),
+                      ),
+                    ],
+                  ),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      "Cancer de Pulmão",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromRGBO(0, 51, 102, 50),
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                Text(
+                  "NOTIFICAÇÕES ",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Transform.scale(
+                    scale: 1.7,
+                    child: Switch(
+                      value: notificacaoAtiva,
+                      onChanged: (bool valor) {
+                        setState(() {
+                          notificacaoAtiva = valor;
+                        });
+                        print(
+                          "Notificações ${valor ? 'ativadas' : 'desativadas'}",
+                        );
+                      },
+
+                      inactiveThumbColor: Colors.blue,
+                      inactiveTrackColor: Colors.white,
+                      activeTrackColor: Colors.blue,
+
+                      padding: EdgeInsets.only(left: 27),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(width: 100),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: Size(170, 60),
+                      ),
+                      child: Text(
+                        "SAIR",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 100),
                   ],
                 ),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Cancer de Pulmão",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromRGBO(0, 51, 102, 50),
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _mostrarOpcoesEscolha() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Galeria'),
+                onTap: () {
+                  _pegarImagem(ImageSource.gallery);
+                  Navigator.of(context).pop(); // Fecha o bottom sheet
+                },
               ),
-
-              SizedBox(height: 20),
-
-              Text(
-                "NOTIFICAÇÕES ",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: Transform.scale(
-                  scale: 1.7,
-                  child: Switch(
-                    value: notificacaoAtiva,
-                    onChanged: (bool valor) {
-                      setState(() {
-                        notificacaoAtiva = valor;
-                      });
-                      print(
-                        "Notificações ${valor ? 'ativadas' : 'desativadas'}",
-                      );
-                    },
-
-                    inactiveThumbColor: Colors.blue,
-                    inactiveTrackColor: Colors.white,
-                    activeTrackColor: Colors.blue,
-
-                    padding: EdgeInsets.only(left: 27),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(width: 100),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      elevation: 8,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      minimumSize: Size(170, 60)
-                    ),
-                    child: Text(
-                      "SAIR",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 100),
-                ],
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('Câmera'),
+                onTap: () {
+                  _pegarImagem(ImageSource.camera);
+                  Navigator.of(context).pop(); // Fecha o bottom sheet
+                },
               ),
             ],
           ),
-        ],
-      ),
-      ),
+        );
+      },
     );
+  }
+
+  Future<void> _pegarImagem(ImageSource source) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? imagem = await _picker.pickImage(source: source);
+
+    if (imagem != null) {
+      setState(() {
+        _imagemSelecionada = File(imagem.path);
+      });
+    }
   }
 }

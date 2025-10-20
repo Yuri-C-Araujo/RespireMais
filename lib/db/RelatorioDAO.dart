@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
-import '../DBHelper.dart';
-import '../relatorio.dart';
+import 'package:respire_mais/db/DBHelper.dart';
+import 'package:respire_mais/domain/relatorio.dart';
+
 
 class RelatorioDao {
 
