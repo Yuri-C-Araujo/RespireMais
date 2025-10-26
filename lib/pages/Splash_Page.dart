@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:respire_mais/Historico.dart';
+import 'package:respire_mais/pages/Historico.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
 
