@@ -66,7 +66,10 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             const Spacer(),
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Image.asset('assets/Logo-Respire-Carr-Contorno.png', height: 150),
+              child: Image.asset(
+                'assets/Logo-Respire-Carregamento.png',
+                height: 150,
+              ),
             ),
             const Spacer(),
             const CircularProgressIndicator(
