@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
-import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
+import 'package:respire_mais/pages/Confirmacao_pdf.dart';
 
 class Historico extends StatefulWidget {
 
@@ -46,7 +46,14 @@ class _HistoricoState extends State<Historico> {
                 ],
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ConfirmacaoPdf(),
+                      ),
+                  );
+                },
                 icon: Icon(
                   CupertinoIcons.person,
                   color: Colors.blue,
@@ -90,7 +97,23 @@ class _HistoricoState extends State<Historico> {
 
                 SizedBox(height: 100),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return const ConfirmacaoPdf();
+                        },
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
