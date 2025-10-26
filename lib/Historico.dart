@@ -4,7 +4,12 @@ import 'package:respire_mais/domain/Informacoes.dart';
 import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
 
 class Historico extends StatefulWidget {
-  const Historico({super.key});
+
+  final List<Informacoes> informacoesCarregadas;
+  const Historico({
+    super.key,
+    required this.informacoesCarregadas,
+  });
 
   @override
   State<Historico> createState() => _HistoricoState();
@@ -17,12 +22,7 @@ class _HistoricoState extends State<Historico> {
   @override
   void initState() {
     super.initState();
-    loadData();
-  }
-
-  loadData() async {
-    listInformacoes = await Informacoes_dao().listInformacoes();
-    setState(() {});
+   listInformacoes = widget.informacoesCarregadas;
   }
 
   Widget build(BuildContext context) {

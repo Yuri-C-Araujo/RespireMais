@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:respire_mais/Banco_Dados/shared_prefs.dart';
 import 'package:respire_mais/Historico.dart';
+import 'package:respire_mais/domain/Informacoes.dart';
+import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -26,26 +27,32 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       ),
     );
     _animationController.repeat(reverse: true);
-    checkUserHistorico();
+    loadAndNavigate();
   }
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  checkUserHistorico() async {
-    await Future.delayed(const Duration(seconds: tempoTotalDaTela));
-    bool isLoggedIn = await SharedPrefs().getUserStatus();
+  loadAndNavigate() async {
+    Future<void> delay = Future.delayed(
+        const Duration(seconds: tempoTotalDaTela));
+    Future<List<Informacoes>> loadData = Informacoes_dao().listInformacoes();
+    var results = await Future.wait([
+      delay,
+      loadData,
+    ]);
+    List<Informacoes> dadosCarregados = results[1] as List<Informacoes>;
     if (mounted) {
-      if (isLoggedIn) {
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Historico(),
-        ));
-      } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Historico(),
-        ));
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              Historico(
+                informacoesCarregadas: dadosCarregados,
+              ),
+        ),
+      );
     }
   }
   @override
