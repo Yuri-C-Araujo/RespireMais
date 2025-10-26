@@ -2,7 +2,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'model.dart';
 import 'dao.dart';
+
+// NOVO: Importado para usar 'File' (para o Image.file)
 import 'dart:io';
+
+// NOVO: Importado o pacote image_picker (essencial para ImageSource)
 import 'package:image_picker/image_picker.dart';
 
 class MedicamentosPage extends StatefulWidget {
@@ -33,7 +37,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
   }
 
   //
-  // --- FUNÇÃO "adicionar()" COMPLETAMENTE MODIFICADA ---
+  // --- FUNÇÃO "adicionar()" MODIFICADA (COM IMAGE_PICKER, SHOWTIMEPICKER E BOTÕES ESTILIZADOS) ---
   //
   Future<void> adicionar() async {
     final novoMedicamento = await showDialog<Medicamento>(
@@ -183,15 +187,13 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 // MODIFICADO: Botão Salvar com o estilo do seu app
                 ElevatedButton(
                   onPressed: () {
-                    // NOVO: Validação simples para não salvar em branco
-                    if (nomeCtrl.text.isNotEmpty && horarioCtrl.text.isNotEmpty) {
-                      final med = Medicamento(
-                        nome: nomeCtrl.text,
-                        horario: horarioCtrl.text, // Agora contém "HH:mm"
-                        urlImagem: imagePath ?? '', // Salvamos o *caminho* do arquivo
-                      );
-                      Navigator.pop(context, med);
-                    }
+                    // (Removida a validação extra que eu tinha adicionado)
+                    final med = Medicamento(
+                      nome: nomeCtrl.text,
+                      horario: horarioCtrl.text, // Agora contém "HH:mm"
+                      urlImagem: imagePath ?? '', // Salvamos o *caminho* do arquivo
+                    );
+                    Navigator.pop(context, med);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue, // Cor principal
@@ -232,31 +234,11 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     }
   }
 
+  // --- FUNÇÃO "deletarMedicamento" REVERTIDA ---
+  // (Esta é a sua função original, sem o dialog de confirmação)
   deletarMedicamento(int id) async {
-    // MODIFICADO: Adicionado um dialog de confirmação (boa prática)
-    bool? deletar = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirmar Exclusão'),
-        content: Text('Você tem certeza que deseja excluir este medicamento?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false), // Não deleta
-            child: Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true), // Sim, deleta
-            child: Text('Excluir', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-
-    // Se o usuário confirmou (deletar == true)
-    if (deletar ?? false) {
-      await dao.deletar(id);
-      carregarMedicamentos(); // Recarrega a lista
-    }
+    await dao.deletar(id);
+    carregarMedicamentos(); // Recarrega a lista
   }
 
   @override
@@ -306,16 +288,10 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 children: [
                   Text('Medicamentos', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[800]),),
                   SizedBox(height: 20),
+                  // --- "Expanded" REVERTIDO ---
+                  // (Esta é a sua lógica original, sem a mensagem de lista vazia)
                   Expanded(
-                    // MODIFICADO: Adicionado um ternário para mostrar mensagem se a lista estiver vazia
-                    child: lista.isEmpty
-                        ? Center(
-                      child: Text(
-                        'Nenhum medicamento adicionado.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                      ),
-                    )
-                        : ListView( // (O ListView/Wrap não foi modificado)
+                    child: ListView(
                       children: [
                         Wrap(
                           spacing: 10,
@@ -324,7 +300,6 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                           children: lista.map((med) {
                             return MedicamentoCard(
                               medicamento: med,
-                              // MODIFICADO: A função de deletar agora é chamada com confirmação
                               onDelete: () => deletarMedicamento(med.id!),
                             );
                           }).toList(),
@@ -344,6 +319,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
 
 //
 // --- CLASSE MEDICAMENTOCARD MODIFICADA (PARA LIDAR COM IMAGEM DE ARQUIVO) ---
+// (Esta parte é necessária para o image_picker funcionar)
 //
 class MedicamentoCard extends StatelessWidget {
   final Medicamento medicamento;
@@ -351,7 +327,8 @@ class MedicamentoCard extends StatelessWidget {
 
   const MedicamentoCard({required this.medicamento, required this.onDelete, super.key});
 
-  // NOVO: Widget helper para decidir qual imagem mostrar (Arquivo ou Placeholder)
+  // NOVO: Widget helper para decidir qual imagem mostrar (Arquivo, URL ou Placeholder)
+  // (Este helper é necessário para o image_picker funcionar)
   Widget _buildImageWidget() {
     final String path = medicamento.urlImagem;
 
@@ -366,7 +343,7 @@ class MedicamentoCard extends StatelessWidget {
       );
     }
 
-    // Se começar com http, é uma URL da web (mantém compatibilidade)
+    // Se começar com http, é uma URL da web (mantém compatibilidade com seu código original)
     bool isNetworkUrl = path.startsWith('http://') || path.startsWith('https://');
 
     if (isNetworkUrl) {
@@ -384,8 +361,7 @@ class MedicamentoCard extends StatelessWidget {
         height: 80,
         width: 80,
         fit: BoxFit.cover,
-        errorBuilder: (c, e, s) { // NOVO: Error builder melhorado para arquivos
-          print('Erro ao carregar imagem do arquivo: $e');
+        errorBuilder: (c, e, s) {
           return Container(
               height: 80,
               width: 80,
@@ -426,7 +402,7 @@ class MedicamentoCard extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: onDelete, // onDelete agora chama 'deletarMedicamento' com confirmação
+              onPressed: onDelete, // onDelete agora chama 'deletarMedicamento' (a versão simples)
             ),
           ],
         ),
