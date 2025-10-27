@@ -57,7 +57,7 @@ class _SavingReportPageState extends State<LoadingPage>
                 ),
                 SizedBox(width: 12),
                 Text(
-                  "Salvando Relatório...",
+                  "Salvando sua nova foto...",
                   style: TextStyle(
                     color: Colors.blue,
                     fontSize: 18,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:respire_mais/Loading_page.dart';
+import 'api/cheetaho_api_service.dart';
+import 'domain/perfil.dart';
+import 'package:respire_mais/api/PerfilApi.dart';
 
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
@@ -13,11 +15,110 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   bool notificacaoAtiva = true;
   bool _mostrarSenha = false;
-  String senha = "minhasenha123";
-  File? _imagemSelecionada;
+  final PerfilApiService _perfilService = PerfilApiService();
+  PerfilModel? perfil;
+  bool _carregandoPerfil = true;
+
+  // --- NOSSAS VARIÁVEIS DE ESTADO ---
+
+  // <<< MUDANÇA: Instancia o serviço
+  final CheetahoApiService _apiService = CheetahoApiService();
+
+  // Esta é a URL de teste que vamos otimizar
+
+  // Onde vamos guardar a URL otimizada que a API retornar
+  String? urlImagemOtimizada;
+
+  // Para controlar o estado de carregamento
+  bool _estaCarregandoApi = false;
+
+  // --- FIM DAS VARIÁVEIS ---
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarPerfil();
+  }
+
+  Future<void> _carregarPerfil() async {
+    PerfilModel? dados = await _perfilService.getPerfil();
+    if (mounted) {
+      setState(() {
+        perfil = dados;
+        _carregandoPerfil = false;
+      });
+    }
+  }
+
+  // <<< MUDANÇA: Esta função agora será chamada pelo clique
+  Future<void> _otimizarImagem() async {
+    // Não permitir cliques múltiplos enquanto carrega
+    if (_estaCarregandoApi) return;
+
+    setState(() {
+      _estaCarregandoApi = true;
+    });
+
+    // <<< MUDANÇA: Mostra a página de Loading
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (_, __, ___) => const LoadingPage(),
+      ),
+    );
+
+    String? urlori = perfil!.urlImagemOriginal;
+
+    // Chama o serviço para fazer o trabalho pesado
+    final String? novaUrl = await _apiService.otimizarImagem(urlori);
+
+    // <<< MUDANÇA: Fecha a página de Loading
+    Navigator.of(context).pop();
+
+    // Se o serviço retornou uma URL (não nula), atualiza o estado
+    if (novaUrl != null) {
+      setState(() {
+        perfil = PerfilModel(
+          id: perfil!.id,
+          nome: perfil!.nome,
+          senha: perfil!.senha,
+          diagnostico: perfil!.diagnostico,
+          urlImagemOriginal: novaUrl,
+        );
+        urlImagemOtimizada = novaUrl;
+      });
+    } else {
+      print("Falha ao otimizar a imagem.");
+    }
+
+    setState(() {
+      _estaCarregandoApi = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_carregandoPerfil) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    // Se o perfil falhou ao carregar (é nulo), mostra um erro
+    if (perfil == null) {
+      return Scaffold(
+        body: Center(
+          child: Text("Erro ao carregar perfil."),
+        ),
+      );
+    }
+    // <<< MUDANÇA: A lógica da URL a mostrar é apenas a otimizada
+    // Se for nula, o backgroundImage não mostra nada.
+    String? urlParaMostrar = urlImagemOtimizada;
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -34,35 +135,30 @@ class _PerfilState extends State<Perfil> {
                 ),
               ),
             ),
-
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
               child: Container(color: Colors.white.withOpacity(0.5)),
             ),
-
             ListView(
               padding: EdgeInsets.all(16),
               children: [
+                // <<< MUDANÇA: Corrigido o GestureDetector
                 GestureDetector(
-                  onTap: _mostrarOpcoesEscolha, // Chama a função ao clicar
+                  onTap: _otimizarImagem, // Chama a API ao clicar
                   child: CircleAvatar(
                     radius: 80,
                     backgroundColor: Colors.blue[50],
-                    // Mostra a imagem selecionada (se houver)
-                    // backgroundImage é melhor para File
-                    backgroundImage:
-                        _imagemSelecionada != null
-                            ? FileImage(_imagemSelecionada!)
-                            : null,
-                    // Mostra o ícone apenas se nenhuma imagem foi selecionada
-                    child:
-                        _imagemSelecionada == null
-                            ? Icon(Icons.person, size: 150, color: Colors.blue)
-                            : null,
+                    backgroundImage: (urlImagemOtimizada != null)
+                        ? NetworkImage(urlImagemOtimizada!)
+                        : null, // Nenhuma imagem até otimizar
+                    child: (urlImagemOtimizada == null)
+                        ? Icon(Icons.person, size: 100, color: Colors.blue[200])
+                        : null, // Mostra ícone se ainda não otimizou
                   ),
                 ),
                 SizedBox(height: 20),
 
+                // ... (O resto do seu código de UI continua o mesmo) ...
                 Center(
                   child: Text(
                     "PERFIL",
@@ -98,7 +194,7 @@ class _PerfilState extends State<Perfil> {
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
-                      "Levi Soares Passos",
+                      perfil != null ? perfil!.nome : "Carregando...",
                       style: TextStyle(
                         fontSize: 20,
                         color: Color.fromRGBO(0, 51, 102, 50),
@@ -136,7 +232,9 @@ class _PerfilState extends State<Perfil> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _mostrarSenha ? senha : "*******",
+                          _mostrarSenha
+                              ? (perfil?.senha ?? "")
+                              : "*******",
                           style: TextStyle(
                             fontSize: 20,
                             color: Color.fromRGBO(0, 51, 102, 1),
@@ -187,7 +285,7 @@ class _PerfilState extends State<Perfil> {
                   child: Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Text(
-                      "Cancer de Pulmão",
+                      perfil != null ? perfil!.diagnostico : "Carregando...",
                       style: TextStyle(
                         fontSize: 20,
                         color: Color.fromRGBO(0, 51, 102, 50),
@@ -264,46 +362,5 @@ class _PerfilState extends State<Perfil> {
         ),
       ),
     );
-  }
-
-  void _mostrarOpcoesEscolha() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text('Galeria'),
-                onTap: () {
-                  _pegarImagem(ImageSource.gallery);
-                  Navigator.of(context).pop(); // Fecha o bottom sheet
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_camera),
-                title: Text('Câmera'),
-                onTap: () {
-                  _pegarImagem(ImageSource.camera);
-                  Navigator.of(context).pop(); // Fecha o bottom sheet
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _pegarImagem(ImageSource source) async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? imagem = await _picker.pickImage(source: source);
-
-    if (imagem != null) {
-      setState(() {
-        _imagemSelecionada = File(imagem.path);
-      });
-    }
   }
 }

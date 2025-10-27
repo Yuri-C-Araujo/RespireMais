@@ -1,29 +1,26 @@
-class perfil {
-  late String nome;
-  late String diagnostico;
-  late String senha;
-  late String? fotoUrl;
+class PerfilModel {
+  final int id;
+  final String nome;
+  final String senha;
+  final String diagnostico;
+  final String urlImagemOriginal;
 
-  perfil({
+  PerfilModel({
+    required this.id,
     required this.nome,
-    required this.diagnostico,
     required this.senha,
-    this.fotoUrl,
+    required this.diagnostico,
+    required this.urlImagemOriginal,
   });
 
-  perfil.fromJson(Map<String, dynamic> json) {
-    nome = json['nome'];
-    diagnostico = json['diagnostico'];
-    senha = json['senha'];
-    fotoUrl = json['fotoUrl'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['nome'] = this.nome;
-    data['diagnostico'] = this.diagnostico;
-    data['senha'] = this.senha;
-    data['fotoUrl'] = this.fotoUrl;
-    return data;
+  // Construtor que converte JSON em um objeto PerfilModel
+  factory PerfilModel.fromJson(Map<String, dynamic> json) {
+    return PerfilModel(
+      id: json['id'] ?? 0,
+      nome: json['nome'] ?? '',
+      senha: json['senha'] ?? '',
+      diagnostico: json['diagnostico'] ?? '',
+      urlImagemOriginal: json['fotoUrl'] ?? '',
+    );
   }
 }
