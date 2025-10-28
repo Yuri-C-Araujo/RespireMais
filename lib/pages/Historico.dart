@@ -26,6 +26,7 @@ class _HistoricoState extends State<Historico> {
     _historicoFuture = ApiService.fetchHistoricoFake();
   }
 
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
