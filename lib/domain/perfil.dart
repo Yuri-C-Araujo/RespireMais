@@ -13,7 +13,6 @@ class PerfilModel {
     required this.urlImagemOriginal,
   });
 
-  // Construtor que converte JSON em um objeto PerfilModel
   factory PerfilModel.fromJson(Map<String, dynamic> json) {
     return PerfilModel(
       id: json['id'] ?? 0,

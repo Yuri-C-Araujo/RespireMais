@@ -18,26 +18,33 @@ class _PerfilState extends State<Perfil> {
   final PerfilApiService _perfilService = PerfilApiService();
   PerfilModel? perfil;
   bool _carregandoPerfil = true;
-
-  // --- NOSSAS VARIÁVEIS DE ESTADO ---
-
-  // <<< MUDANÇA: Instancia o serviço
   final CheetahoApiService _apiService = CheetahoApiService();
-
-  // Esta é a URL de teste que vamos otimizar
-
-  // Onde vamos guardar a URL otimizada que a API retornar
   String? urlImagemOtimizada;
-
-  // Para controlar o estado de carregamento
   bool _estaCarregandoApi = false;
 
-  // --- FIM DAS VARIÁVEIS ---
 
   @override
   void initState() {
     super.initState();
-    _carregarPerfil();
+    _mostrarLoadingEnquantoCarrega();
+  }
+
+  Future<void> _mostrarLoadingEnquantoCarrega() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          opaque: false,
+          barrierDismissible: false,
+          pageBuilder: (_, __, ___) => const LoadingPage(),
+        ),
+      );
+    });
+
+    await _carregarPerfil();
+
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> _carregarPerfil() async {
@@ -50,16 +57,13 @@ class _PerfilState extends State<Perfil> {
     }
   }
 
-  // <<< MUDANÇA: Esta função agora será chamada pelo clique
   Future<void> _otimizarImagem() async {
-    // Não permitir cliques múltiplos enquanto carrega
     if (_estaCarregandoApi) return;
 
     setState(() {
       _estaCarregandoApi = true;
     });
 
-    // <<< MUDANÇA: Mostra a página de Loading
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
@@ -68,15 +72,10 @@ class _PerfilState extends State<Perfil> {
       ),
     );
 
-    String? urlori = perfil!.urlImagemOriginal;
+    final String? novaUrl = await _apiService.otimizarImagem(perfil!.urlImagemOriginal);
 
-    // Chama o serviço para fazer o trabalho pesado
-    final String? novaUrl = await _apiService.otimizarImagem(urlori);
-
-    // <<< MUDANÇA: Fecha a página de Loading
     Navigator.of(context).pop();
 
-    // Se o serviço retornou uma URL (não nula), atualiza o estado
     if (novaUrl != null) {
       setState(() {
         perfil = PerfilModel(
@@ -99,24 +98,14 @@ class _PerfilState extends State<Perfil> {
 
   @override
   Widget build(BuildContext context) {
-    if (_carregandoPerfil) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    //if (_carregandoPerfil) {
+      //return Scaffold(body: Center(child: CircularProgressIndicator()));
+    //}
+
+    if (perfil == null) {
+      return Scaffold(body: Center(child: Text("Erro ao carregar perfil.")));
     }
 
-    // Se o perfil falhou ao carregar (é nulo), mostra um erro
-    if (perfil == null) {
-      return Scaffold(
-        body: Center(
-          child: Text("Erro ao carregar perfil."),
-        ),
-      );
-    }
-    // <<< MUDANÇA: A lógica da URL a mostrar é apenas a otimizada
-    // Se for nula, o backgroundImage não mostra nada.
     String? urlParaMostrar = urlImagemOtimizada;
 
     return SafeArea(
@@ -142,23 +131,20 @@ class _PerfilState extends State<Perfil> {
             ListView(
               padding: EdgeInsets.all(16),
               children: [
-                // <<< MUDANÇA: Corrigido o GestureDetector
                 GestureDetector(
-                  onTap: _otimizarImagem, // Chama a API ao clicar
+                  onTap: _otimizarImagem,
                   child: CircleAvatar(
                     radius: 80,
                     backgroundColor: Colors.blue[50],
                     backgroundImage: (urlImagemOtimizada != null)
                         ? NetworkImage(urlImagemOtimizada!)
-                        : null, // Nenhuma imagem até otimizar
+                        : null,
                     child: (urlImagemOtimizada == null)
                         ? Icon(Icons.person, size: 100, color: Colors.blue[200])
-                        : null, // Mostra ícone se ainda não otimizou
+                        : null,
                   ),
                 ),
                 SizedBox(height: 20),
-
-                // ... (O resto do seu código de UI continua o mesmo) ...
                 Center(
                   child: Text(
                     "PERFIL",
@@ -232,9 +218,7 @@ class _PerfilState extends State<Perfil> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _mostrarSenha
-                              ? (perfil?.senha ?? "")
-                              : "*******",
+                          _mostrarSenha ? (perfil?.senha ?? "") : "*******",
                           style: TextStyle(
                             fontSize: 20,
                             color: Color.fromRGBO(0, 51, 102, 1),
