@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 
 class ApiService{
-  static const String _apiKei = '3bb6NDExNDc6MzgzNTI6cjh6RGRaMFdqVzUyU2E3ZQ=';
+  static const String _apiKei = '226aNDExNDc6MzgzNTI6ZTNjUENYTDNuT3U0Z2ZUOQ=';
   static const String _templateId = '38077b23ef7d51f8';
   static const String _fakeApiUrl = 'https://my-json-server.typicode.com/Israelnl17/API_fake/informacoes';
-  static const String _apiTemplateUrl = 'https://app.apitemplate.io/manage-api/';
+  static const String _apiTemplateUrl = 'https://api.apitemplate.io/v1/create';
   static final Dio _dio = Dio();
-  static Future<List<Informacoes>> fethHistoricoFake() async{
+  static Future<List<Informacoes>> fetchHistoricoFake() async{
     try{
       final response = await _dio.get(_fakeApiUrl);
       final List<dynamic> jsonData = response.data;
@@ -22,20 +22,23 @@ class ApiService{
     }
   }
   static Future<String> gerarPdfApi(List<Informacoes> dados) async{
-    List<Map<String, dynamic>> dadosJason = dados.map((info) => info.toJson()).toList();
+    List<Map<String, dynamic>> dadosJson = dados.map((info) => info.toJson()).toList();
+    Map<String, dynamic> dadosApi = {
+      "items": dadosJson
+    };
     String urlFinal = '$_apiTemplateUrl?template_id=$_templateId';
     try{
       final response = await _dio.post(
         urlFinal,
-        data: dadosJason,
+        data:dadosApi,
         options: Options(
           headers: {
             'Authorization': 'Bearer $_apiKei',
           },
         ),
       );
-      final Map<String, dynamic> jasonData = response.data;
-      String linkPdf = jasonData['download_url'];
+      final Map<String, dynamic> jsonData = response.data;
+      String linkPdf = jsonData['download_url'];
       print('PDF gerado com sucesso: $linkPdf');
       return linkPdf;
     } on DioException catch (e) {

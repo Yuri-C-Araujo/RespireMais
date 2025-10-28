@@ -101,9 +101,8 @@ class _ConfirmacaoPdfState extends State<ConfirmacaoPdf> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                              onPressed:(){
-                                _estaGerado? null: _chamarApiGerarPdf;
-                              },
+                              onPressed: _estaGerado? null: _chamarApiGerarPdf,
+
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,

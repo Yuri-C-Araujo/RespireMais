@@ -23,7 +23,7 @@ class _HistoricoState extends State<Historico> {
   @override
   void initState() {
     super.initState();
-    _historicoFuture = ApiService.fethHistoricoFake();
+    _historicoFuture = ApiService.fetchHistoricoFake();
   }
 
   Widget build(BuildContext context) {
