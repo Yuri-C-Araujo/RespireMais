@@ -81,17 +81,6 @@ class _HistoricoState extends State<Historico> {
             ),
             SizedBox(height: 20),
 
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                "Meu Histórico (da API Fake)",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade700,
-                ),
-              ),
-            ),
             FutureBuilder<List<Informacoes>>(
               future: _historicoFuture,
               builder: (context, snapshot) {

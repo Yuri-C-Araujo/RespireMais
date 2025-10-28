@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 
 class ApiService{
-  static const String _apiKei = '226aNDExNDc6MzgzNTI6ZTNjUENYTDNuT3U0Z2ZUOQ=';
+  static const String _apiKei = 'c7ccNDExNDc6MzgzNTI6VTJMMUpZQm5wbU1kNTNUNA=';
   static const String _templateId = '38077b23ef7d51f8';
   static const String _fakeApiUrl = 'https://my-json-server.typicode.com/Israelnl17/API_fake/informacoes';
   static const String _apiTemplateUrl = 'https://api.apitemplate.io/v1/create';

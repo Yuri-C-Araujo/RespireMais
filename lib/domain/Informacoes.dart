@@ -12,10 +12,10 @@ class Informacoes{
   });
 
   Informacoes.fromJson(Map<String, dynamic> json){
-    datas = json['datas'];
-    dor = json['dor'];
-    fadiga = json['fadiga'];
-    efeitoColateral = json['efeitoColateral'];
+    datas = json['datas'] ?? '';
+    dor = json['dor'] ?? '';
+    fadiga = json['fadiga'] ?? '';
+    efeitoColateral = json['efeitoColateral'] ?? '';
   }
 
   Map<String, dynamic> toJson(){
