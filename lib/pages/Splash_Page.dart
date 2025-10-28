@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:respire_mais/pages/Historico.dart';
-import 'package:respire_mais/domain/Informacoes.dart';
-import 'package:respire_mais/Banco_Dados/Informações_dao.dart';
+
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -11,8 +10,8 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
-  static const int tempoDeRespiracao = 2; // Segundos para inspirar (ou expirar)
-  static const int tempoTotalDaTela = 4; // Segundos totais que a splash fica visível
+  static const int tempoDeRespiracao = 2;
+  static const int tempoTotalDaTela = 4;
   @override
   void initState() {
     super.initState();
@@ -27,30 +26,20 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       ),
     );
     _animationController.repeat(reverse: true);
-    loadAndNavigate();
+    _navigateToHome();
   }
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  loadAndNavigate() async {
-    Future<void> delay = Future.delayed(
-        const Duration(seconds: tempoTotalDaTela));
-    Future<List<Informacoes>> loadData = Informacoes_dao().listInformacoes();
-    var results = await Future.wait([
-      delay,
-      loadData,
-    ]);
-    List<Informacoes> dadosCarregados = results[1] as List<Informacoes>;
+  _navigateToHome() async {
+   await Future.delayed(const Duration(seconds: tempoTotalDaTela));
     if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              Historico(
-                informacoesCarregadas: dadosCarregados,
-              ),
+          builder: (context) => Historico(),
         ),
       );
     }

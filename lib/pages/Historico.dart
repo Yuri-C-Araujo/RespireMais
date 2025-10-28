@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:respire_mais/API/API_service.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 import 'package:respire_mais/pages/Confirmacao_pdf.dart';
 
+
 class Historico extends StatefulWidget {
 
-  final List<Informacoes> informacoesCarregadas;
   const Historico({
     super.key,
-    required this.informacoesCarregadas,
   });
 
   @override
@@ -17,12 +17,13 @@ class Historico extends StatefulWidget {
 
 
 class _HistoricoState extends State<Historico> {
-  List<Informacoes> listInformacoes = [];
+  late Future<List<Informacoes>> _historicoFuture;
+  List<Informacoes> _listaCarregada = [];
 
   @override
   void initState() {
     super.initState();
-   listInformacoes = widget.informacoesCarregadas;
+    _historicoFuture = ApiService.fethHistoricoFake();
   }
 
   Widget build(BuildContext context) {
@@ -46,14 +47,7 @@ class _HistoricoState extends State<Historico> {
                 ],
               ),
               child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ConfirmacaoPdf(),
-                      ),
-                  );
-                },
+                onPressed: () {},
                 icon: Icon(
                   CupertinoIcons.person,
                   color: Colors.blue,
@@ -84,95 +78,128 @@ class _HistoricoState extends State<Historico> {
                 ),
               ),
             ),
-            Column(
-              children: [
+            SizedBox(height: 20),
 
-                  ListView.builder(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                "Meu Histórico (da API Fake)",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+            ),
+            FutureBuilder<List<Informacoes>>(
+              future: _historicoFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Erro ao carregar histórico: ${snapshot.error}',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  _listaCarregada = snapshot.data!;
+                  return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: listInformacoes.length,
+                    itemCount: _listaCarregada.length,
                     itemBuilder: (context, i) {
-                      return buildInformacao(listInformacoes[i]);
+                      return _buildInformacao(_listaCarregada[i]);
+                    },
+                  );
+                }
+                return Center(child: Text('Nenhum histórico encontrado.'));
+              },
+            ),
+
+            SizedBox(height: 100),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    opaque: false,
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return ConfirmacaoPdf(
+                          listaDeInformacoes: _listaCarregada);
+                    },
+                    transitionsBuilder: (context, animation, secondaryAnimation,
+                        child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
                     },
                   ),
-
-                SizedBox(height: 100),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return const ConfirmacaoPdf();
-                        },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    elevation: 6,
-                    maximumSize: Size(450, 80),
-                    padding: EdgeInsets.all(18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    'Gerar PDF / Compartilhar com médico',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                elevation: 6,
+                maximumSize: Size(450, 80),
+                padding: EdgeInsets.all(18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                SizedBox(height: 20),
-              ],
+              ),
+              child: Text(
+                'Gerar PDF / Compartilhar com médico',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
-}
 
 
-buildInformacao(Informacoes info) {
-  return Container(
-    width: 450,
-    height: 95,
-    padding: EdgeInsets.all(18),
-    margin: EdgeInsets.all(12),
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black38,
-            blurRadius: 6,
-            offset: Offset(2, 5)),
-      ],
-    ),
-    child: Column(
-      children: [
-        Center(
-          child: Text(
-            "${info.datas} - Dor ${info.dor} | Fadiga: ${info.fadiga} | Efeito: ${info.efeitoColateral == '' ? "Nenhum" : info.efeitoColateral}",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black87,
-              fontWeight: FontWeight.w900,
+  Widget _buildInformacao(Informacoes info) {
+    return Container(
+      width: 450,
+      height: 95,
+      padding: EdgeInsets.all(18),
+      margin: EdgeInsets.all(12),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black38,
+              blurRadius: 6,
+              offset: Offset(2, 5)),
+        ],
+      ),
+      child: Column(
+        children: [
+          Center(
+            child: Text(
+              "${info.datas} - Dor ${info.dor} | Fadiga: ${info
+                  .fadiga} | Efeito: ${info.efeitoColateral == ''
+                  ? "Nenhum"
+                  : info.efeitoColateral}",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black87,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

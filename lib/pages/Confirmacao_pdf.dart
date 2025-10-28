@@ -1,15 +1,63 @@
 import'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:respire_mais/pages/Splash_Page.dart';
+import 'package:respire_mais/domain/Informacoes.dart';
+import 'package:respire_mais/API/API_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ConfirmacaoPdf extends StatefulWidget {
-  const ConfirmacaoPdf({super.key});
+  final List<Informacoes> listaDeInformacoes;
+  const ConfirmacaoPdf({
+    super.key,
+    required this.listaDeInformacoes,
+  });
 
   @override
   State<ConfirmacaoPdf> createState() => _ConfirmacaoPdfState();
 }
 
 class _ConfirmacaoPdfState extends State<ConfirmacaoPdf> {
+
+  bool _estaGerado = false;
+  void _chamarApiGerarPdf() async{
+    if(widget.listaDeInformacoes.isEmpty){
+      print("Lista de informações vazia.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nenhum dado para gerar PDF.')),
+      );
+      Navigator.pop(context);
+      return;
+    }
+    setState(() {
+      _estaGerado = true;
+    });
+    try{
+      String urlPdf = await ApiService.gerarPdfApi(widget.listaDeInformacoes);
+      final Uri url = Uri.parse(urlPdf);
+      if(await canLaunchUrl(url)){
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      }else{
+        throw 'Não foi possivel abrir o link $url';
+      }
+      if(mounted){
+        Navigator.pop(context);
+      }
+
+    }catch (e) {
+      print('Erro ao gerar PDF: $e');
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao gerar PDF: $e')),
+        );
+      }
+    } finally {
+      if(mounted) {
+        setState(() {
+          _estaGerado = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +102,7 @@ class _ConfirmacaoPdfState extends State<ConfirmacaoPdf> {
                         children: [
                           ElevatedButton(
                               onPressed:(){
+                                _estaGerado? null: _chamarApiGerarPdf;
                               },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
@@ -64,7 +113,8 @@ class _ConfirmacaoPdfState extends State<ConfirmacaoPdf> {
                               ),
                               minimumSize: Size(120, 50),
                             ),
-                            child: Text(
+                            child: _estaGerado? CircularProgressIndicator(color: Colors.white):
+                            Text(
                               "SIM",
                               style: TextStyle(
                                 fontSize: 24,
@@ -73,14 +123,8 @@ class _ConfirmacaoPdfState extends State<ConfirmacaoPdf> {
                             ),
                           ),
                           ElevatedButton(
-                              onPressed:(){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const SplashPage(),
-                                  )
-
-                                );
+                              onPressed: _estaGerado? null: (){
+                               Navigator.pop(context);
                               },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,

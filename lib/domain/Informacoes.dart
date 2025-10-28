@@ -15,7 +15,7 @@ class Informacoes{
     datas = json['datas'];
     dor = json['dor'];
     fadiga = json['fadiga'];
-    efeitoColateral = json['efetColateral'];
+    efeitoColateral = json['efeitoColateral'];
   }
 
   Map<String, dynamic> toJson(){
@@ -25,7 +25,7 @@ class Informacoes{
     data['datas'] = this.datas;
     data['dor'] = this.dor;
     data['fadiga'] = this.fadiga;
-    data['efetColateral'] = this.efeitoColateral;
+    data['efeitoColateral'] = this.efeitoColateral;
     return data;
     }
 }
