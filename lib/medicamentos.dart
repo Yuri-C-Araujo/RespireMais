@@ -1,13 +1,14 @@
+// Arquivo: lib/medicamentos.dart
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'model.dart';
-import 'dao.dart';
-
-// NOVO: Importado para usar 'File' (para o Image.file)
+// import 'dao.dart'; // Não usamos mais o DAO
 import 'dart:io';
-
-// NOVO: Importado o pacote image_picker (essencial para ImageSource)
 import 'package:image_picker/image_picker.dart';
+
+// <<< CORREÇÃO 1: IMPORTAR O ARQUIVO DA API >>>
+import 'medicamento_api.dart'; // (Verifique se o nome do arquivo bate)
 
 class MedicamentosPage extends StatefulWidget {
   const MedicamentosPage({super.key});
@@ -17,10 +18,11 @@ class MedicamentosPage extends StatefulWidget {
 }
 
 class _MedicamentosPageState extends State<MedicamentosPage> {
-  final MedicamentoDao dao = MedicamentoDao();
-  List<Medicamento> lista = [];
+  // Instanciamos a classe 'MedicamentoApi'
+  final MedicamentoApi apiService = MedicamentoApi();
 
-  // NOVO: Instância do ImagePicker
+  List<Medicamento> lista = [];
+  bool _isLoading = true;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -30,96 +32,78 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
   }
 
   carregarMedicamentos() async {
-    final dados = await dao.listar();
+    setState(() {
+      _isLoading = true;
+    });
+
+    final dados = await apiService.getMedicamentos();
+
     setState(() {
       lista = dados;
+      _isLoading = false;
     });
   }
 
-  //
-  // --- FUNÇÃO "adicionar()" MODIFICADA (COM IMAGE_PICKER, SHOWTIMEPICKER E BOTÕES ESTILIZADOS) ---
-  //
   Future<void> adicionar() async {
     final novoMedicamento = await showDialog<Medicamento>(
       context: context,
       builder: (context) {
         final nomeCtrl = TextEditingController();
-        // MODIFICADO: Controller de horário será preenchido pelo TimePicker
         final horarioCtrl = TextEditingController();
-        // MODIFICADO: Variável para guardar o *caminho* da imagem
         String? imagePath;
 
-        // MODIFICADO: Usamos um StatefulBuilder para que o Dialog possa
-        // atualizar seu próprio estado (para mostrar a pré-visualização da imagem)
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setStateDialog) {
 
-            // --- NOVO: FUNÇÃO HELPER PARA O HORÁRIO (showTimePicker) ---
+            // --- Função helper para o Horário (showTimePicker) ---
             Future<void> _selecionarHorario(BuildContext context) async {
-              // Chama o seletor de horário nativo
               final TimeOfDay? timeOfDay = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
               );
-
-              // Se o usuário selecionar um horário (não cancelar)
               if (timeOfDay != null) {
-                // Formata o horário para um padrão 24h (ex: "08:30" ou "14:05")
                 final String horaFormatada = timeOfDay.hour.toString().padLeft(2, '0');
                 final String minutoFormatado = timeOfDay.minute.toString().padLeft(2, '0');
-
-                // Atualiza o controller e a UI do Dialog
                 setStateDialog(() {
                   horarioCtrl.text = "$horaFormatada:$minutoFormatado";
                 });
               }
             }
-            // --- FIM DA FUNÇÃO HELPER DE HORÁRIO ---
+            // --- Fim da Função helper de Horário ---
 
-
-            // --- NOVO: FUNÇÃO HELPER PARA A IMAGEM (image_picker) ---
+            // --- Função helper para a Imagem (image_picker) ---
             void _pegarImagem(ImageSource source) async {
               final XFile? pickedFile = await _picker.pickImage(source: source);
               if (pickedFile != null) {
-                // Atualiza o estado *dentro* do Dialog
                 setStateDialog(() {
                   imagePath = pickedFile.path;
                 });
               }
             }
-            // --- FIM DA FUNÇÃO HELPER DE IMAGEM ---
+            // --- Fim da Função helper de Imagem ---
 
             return AlertDialog(
               title: Text('Adicionar Medicamento'),
-              // MODIFICADO: Adicionado SingleChildScrollView para evitar overflow
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(controller: nomeCtrl, decoration: InputDecoration(labelText: 'Nome')),
-
-                    // --- MODIFICADO: CAMPO DE HORÁRIO (agora usa o TimePicker) ---
                     TextField(
                       controller: horarioCtrl,
                       decoration: InputDecoration(
                         labelText: 'Horário',
                         hintText: 'Clique para selecionar',
-                        suffixIcon: Icon(Icons.access_time_outlined), // Ícone de relógio
+                        suffixIcon: Icon(Icons.access_time_outlined),
                       ),
-                      readOnly: true,  // Impede o usuário de digitar
+                      readOnly: true,
                       onTap: () {
-                        // Chama a nossa nova função helper
                         _selecionarHorario(context);
                       },
                     ),
-                    // --- FIM DO CAMPO DE HORÁRIO ---
-
                     SizedBox(height: 20),
-
-                    // --- NOVO: UI DE SELEÇÃO DE IMAGEM (image_picker) ---
                     Text('Adicionar Imagem', style: TextStyle(color: Colors.grey[700])),
                     SizedBox(height: 10),
-                    // Container para a pré-visualização
                     Container(
                       height: 120,
                       width: 120,
@@ -129,7 +113,7 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                       ),
                       child: imagePath == null
                           ? Center(child: Icon(Icons.image_search, size: 50, color: Colors.grey))
-                          : ClipRRect( // Mostra a imagem selecionada
+                          : ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.file(
                           File(imagePath!),
@@ -140,7 +124,6 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    // Botões para Câmera ou Galeria
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -156,54 +139,41 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                         ),
                       ],
                     ),
-                    // --- FIM DA UI DE SELEÇÃO DE IMAGEM ---
                   ],
                 ),
               ),
-              //
-              // --- MODIFICADO: SEÇÃO "ACTIONS" (BOTÕES ESTILIZADOS) ---
-              //
-              // NOVO: Adiciona um preenchimento mais generoso na parte inferior
               actionsPadding: EdgeInsets.fromLTRB(24, 0, 24, 20),
-
-              // NOVO: Alinha os botões (um em cada canto)
               actionsAlignment: MainAxisAlignment.spaceBetween,
-
               actions: [
-                // MODIFICADO: Botão de Cancelar como "OutlinedButton" (botão de contorno)
                 OutlinedButton(
                   onPressed: () => Navigator.pop(context, null),
                   child: Text('Cancelar'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.blue, // Cor do texto e borda
-                    side: BorderSide(color: Colors.blue), // Cor da borda
+                    foregroundColor: Colors.blue,
+                    side: BorderSide(color: Colors.blue),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8), // Mesma borda do outro botão
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   ),
                 ),
-
-                // MODIFICADO: Botão Salvar com o estilo do seu app
                 ElevatedButton(
                   onPressed: () {
-                    // (Removida a validação extra que eu tinha adicionado)
                     final med = Medicamento(
                       nome: nomeCtrl.text,
-                      horario: horarioCtrl.text, // Agora contém "HH:mm"
-                      urlImagem: imagePath ?? '', // Salvamos o *caminho* do arquivo
+                      horario: horarioCtrl.text,
+                      urlImagem: imagePath ?? '',
                     );
                     Navigator.pop(context, med);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Cor principal
-                    foregroundColor: Colors.white, // Cor do texto
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8), // Borda igual ao seu botão principal
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   ),
-                  // NOVO: Adicionando um ícone para ficar mais claro
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -221,31 +191,37 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
     );
 
     if (novoMedicamento != null) {
-      int id = await dao.salvar(novoMedicamento);
-      setState(() {
-        lista.add(Medicamento(
-          id: id,
-          nome: novoMedicamento.nome,
-          horario: novoMedicamento.horario,
-          urlImagem: novoMedicamento.urlImagem,
-        ));
-      });
-      await dao.imprimirBanco();
+      setState(() => _isLoading = true);
+      final Medicamento? medSalvo = await apiService.createMedicamento(novoMedicamento);
+      if (medSalvo != null) {
+        setState(() {
+          lista.add(medSalvo);
+        });
+      }
+      setState(() => _isLoading = false);
     }
   }
 
-  // --- FUNÇÃO "deletarMedicamento" REVERTIDA ---
-  // (Esta é a sua função original, sem o dialog de confirmação)
   deletarMedicamento(int id) async {
-    await dao.deletar(id);
-    carregarMedicamentos(); // Recarrega a lista
+    setState(() {
+      lista.removeWhere((med) => med.id == id);
+    });
+    bool sucesso = await apiService.deleteMedicamento(id);
+    if (!sucesso) {
+      print("Falha ao deletar. Recarregando a lista.");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Falha ao deletar medicamento.'), backgroundColor: Colors.red)
+        );
+      }
+      carregarMedicamentos();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // (Nenhuma mudança no bottomNavigationBar)
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(15),
           child: ElevatedButton(
@@ -262,7 +238,6 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
             ),
           ),
         ),
-        // (Nenhuma mudança no Stack de background)
         body: Stack(
           children: [
             Center(
@@ -288,16 +263,23 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
                 children: [
                   Text('Medicamentos', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[800]),),
                   SizedBox(height: 20),
-                  // --- "Expanded" REVERTIDO ---
-                  // (Esta é a sua lógica original, sem a mensagem de lista vazia)
                   Expanded(
-                    child: ListView(
+                    child: _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : lista.isEmpty
+                        ? Center(
+                      child: Text(
+                        'Nenhum medicamento cadastrado.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                      ),
+                    )
+                        : ListView(
                       children: [
                         Wrap(
                           spacing: 10,
                           runSpacing: 10,
                           alignment: WrapAlignment.center,
-                          children: lista.map((med) {
+                          children: lista.map<Widget>((med) {
                             return MedicamentoCard(
                               medicamento: med,
                               onDelete: () => deletarMedicamento(med.id!),
@@ -317,24 +299,18 @@ class _MedicamentosPageState extends State<MedicamentosPage> {
   }
 }
 
-//
-// --- CLASSE MEDICAMENTOCARD MODIFICADA (PARA LIDAR COM IMAGEM DE ARQUIVO) ---
-// (Esta parte é necessária para o image_picker funcionar)
-//
+class MedicamentoApi {
 class MedicamentoCard extends StatelessWidget {
   final Medicamento medicamento;
   final VoidCallback onDelete;
 
   const MedicamentoCard({required this.medicamento, required this.onDelete, super.key});
 
-  // NOVO: Widget helper para decidir qual imagem mostrar (Arquivo, URL ou Placeholder)
-  // (Este helper é necessário para o image_picker funcionar)
   Widget _buildImageWidget() {
     final String path = medicamento.urlImagem;
 
-    // Se o caminho estiver vazio (ou não foi salvo), mostre um ícone placeholder
     if (path.isEmpty) {
-      return Container( // Container para dar fundo e alinhar o ícone
+      return Container(
         height: 80,
         width: 80,
         alignment: Alignment.center,
@@ -343,7 +319,6 @@ class MedicamentoCard extends StatelessWidget {
       );
     }
 
-    // Se começar com http, é uma URL da web (mantém compatibilidade com seu código original)
     bool isNetworkUrl = path.startsWith('http://') || path.startsWith('https://');
 
     if (isNetworkUrl) {
@@ -355,9 +330,8 @@ class MedicamentoCard extends StatelessWidget {
         errorBuilder: (c, e, s) => Icon(Icons.broken_image_outlined, size: 40),
       );
     } else {
-      // MODIFICADO: Se não for URL, trate como um *caminho de arquivo* local
       return Image.file(
-        File(path), // Usa Image.file()
+        File(path),
         height: 80,
         width: 80,
         fit: BoxFit.cover,
@@ -386,7 +360,6 @@ class MedicamentoCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              // MODIFICADO: Chama o helper que decide qual imagem mostrar
               child: _buildImageWidget(),
             ),
             SizedBox(width: 12),
@@ -402,7 +375,7 @@ class MedicamentoCard extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: onDelete, // onDelete agora chama 'deletarMedicamento' (a versão simples)
+              onPressed: onDelete,
             ),
           ],
         ),
