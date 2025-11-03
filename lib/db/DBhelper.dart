@@ -19,7 +19,13 @@ class DBhelper {
     email TEXT,
     senha TEXT,
     dataNasc TEXT,
-    oqSente TEXT
+    oqSente TEXT,
+    
+    cep TEXT,
+    rua TEXT,
+    bairro TEXT,
+    cidade TEXT,
+    estado TEXT
     );''';
 
     await db.execute(sql);

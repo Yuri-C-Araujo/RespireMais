@@ -13,4 +13,17 @@ class SharedPrefs {
     // Retorna false se o valor não for encontrado
     return prefs.getBool('isUserLoggedIn') ?? false;
   }
+
+  // Salva o nome do usuário
+  Future<void> saveUserName(String nome) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', nome);
+  }
+
+  // Busca o nome do usuário
+  Future<String> getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Retorna string vazia se não for encontrado
+    return prefs.getString('userName') ?? '';
+  }
 }
