@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:respire_mais/API/API_service.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 import 'package:respire_mais/pages/Confirmacao_pdf.dart';
 
 
 class Historico extends StatefulWidget {
 
+  final Future<List<Informacoes>> historicoFuture;
+
   const Historico({
     super.key,
+    required this.historicoFuture,
   });
 
   @override
@@ -17,13 +19,11 @@ class Historico extends StatefulWidget {
 
 
 class _HistoricoState extends State<Historico> {
-  late Future<List<Informacoes>> _historicoFuture;
   List<Informacoes> _listaCarregada = [];
 
   @override
   void initState() {
     super.initState();
-    _historicoFuture = ApiService.fetchHistoricoFake();
   }
 
   @override
@@ -82,7 +82,7 @@ class _HistoricoState extends State<Historico> {
             SizedBox(height: 20),
 
             FutureBuilder<List<Informacoes>>(
-              future: _historicoFuture,
+              future: widget.historicoFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

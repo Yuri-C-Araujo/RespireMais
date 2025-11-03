@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:respire_mais/pages/Historico.dart';
+import 'package:respire_mais/API/API_service.dart';
+import 'package:respire_mais/domain/Informacoes.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -11,10 +13,16 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   static const int tempoDeRespiracao = 2;
-  static const int tempoTotalDaTela = 4;
+  static const int tempoTotalDaTela = 6;
+
+  late Future<List<Informacoes>> _historicoFuture;
+
   @override
   void initState() {
     super.initState();
+
+    _historicoFuture = ApiService.fetchHistoricoFake();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: tempoDeRespiracao),
@@ -28,18 +36,33 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _animationController.repeat(reverse: true);
     _navigateToHome();
   }
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
+
   _navigateToHome() async {
-   await Future.delayed(const Duration(seconds: tempoTotalDaTela));
-    if (mounted) {
+    final timerFuture = Future.delayed(
+        const Duration(seconds: tempoTotalDaTela));
+    try {
+      await Future.wait([_historicoFuture, timerFuture]);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Historico(historicoFuture: _historicoFuture),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Erro ao carregar dados na Splash: $e');
+      await timerFuture;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Historico(),
+          builder: (context) => Historico(historicoFuture: _historicoFuture),
         ),
       );
     }
