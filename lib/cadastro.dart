@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:respire_mais/login.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-// 1. Imports necessários para a API de CEP
-// (Mantendo os imports que você ajustou)
 import 'package:respire_mais/domain/endereco.dart';
 import 'package:respire_mais/api/endereco_api.dart';
-import 'package:dio/dio.dart'; // Para tratar erros da API
+import 'package:dio/dio.dart';
 
 class Cadastro extends StatefulWidget {
   const Cadastro({super.key});
@@ -18,63 +16,52 @@ class Cadastro extends StatefulWidget {
 }
 
 class _CadastroState extends State<Cadastro> {
-  // Controladores antigos
   TextEditingController nomeController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController senhaController = TextEditingController();
   TextEditingController dataNascController = TextEditingController();
   TextEditingController oqSenteController = TextEditingController();
 
-  // 2. Controladores novos para o endereço
   TextEditingController cepController = TextEditingController();
   TextEditingController ruaController = TextEditingController();
   TextEditingController bairroController = TextEditingController();
   TextEditingController cidadeController = TextEditingController();
-  // NOVO CAMPO
   TextEditingController estadoController = TextEditingController();
 
-  // 3. Instância da API de endereço
   final EnderecoApi _enderecoApi = EnderecoApi();
   bool _isLoading = false;
-  bool _isBuscandoCep = false; // Loading para o CEP
+  bool _isBuscandoCep = false;
 
-  // Máscara para Data de Nasc.
   final maskFormatter = MaskTextInputFormatter(
     mask: '##/##/####',
     filter: {"#": RegExp(r'[0-9]')},
   );
 
-  // 4. Máscara para o CEP
   final cepMaskFormatter = MaskTextInputFormatter(
     mask: '#####-###',
     filter: {"#": RegExp(r'[0-9]')},
   );
 
-  // 5. Função para buscar o CEP
   void _buscarCep() async {
-    // A verificação de 9 caracteres agora é feita no onChanged
-    // mas mantemos como uma segurança extra.
     if (cepController.text.length != 9) {
       return;
     }
 
     setState(() {
-      _isBuscandoCep = true; // Mostra o loading
+      _isBuscandoCep = true;
     });
 
     try {
-      final cep = cepController.text.replaceAll('-', ''); // Remove o '-'
+      final cep = cepController.text.replaceAll('-', '');
       final endereco = await _enderecoApi.findByCep(cep);
 
-      // 6. Preenche os campos com a resposta
       setState(() {
         ruaController.text = endereco.rua;
         bairroController.text = endereco.bairro;
         cidadeController.text = endereco.cidade;
-        // PREENCHE O NOVO CAMPO
         estadoController.text = endereco.estado;
       });
-      FocusScope.of(context).unfocus(); // Esconde o teclado
+      FocusScope.of(context).unfocus();
     } on DioException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('CEP não encontrado ou erro de rede.')),
@@ -85,7 +72,7 @@ class _CadastroState extends State<Cadastro> {
       );
     } finally {
       setState(() {
-        _isBuscandoCep = false; // Esconde o loading
+        _isBuscandoCep = false;
       });
     }
   }
@@ -112,12 +99,11 @@ class _CadastroState extends State<Cadastro> {
       senha: senhaController.text.trim(),
       dataNasc: dataNascController.text.trim(),
       oqSente: oqSenteController.text.trim(),
-      // 7. Passa os novos dados para o objeto
+
       cep: cepController.text.trim(),
       rua: ruaController.text.trim(),
       bairro: bairroController.text.trim(),
       cidade: cidadeController.text.trim(),
-      // PASSA O NOVO CAMPO
       estado: estadoController.text.trim(),
     );
     await DadosUsuDao().salvar(dadosUsu);
@@ -133,7 +119,6 @@ class _CadastroState extends State<Cadastro> {
 
   @override
   Widget build(BuildContext context) {
-    // Dica: Crie uma decoração base para reutilizar
     const inputDecorationAzul = InputDecoration(
       floatingLabelStyle: TextStyle(color: Colors.blue),
       focusedBorder: UnderlineInputBorder(
@@ -196,14 +181,12 @@ class _CadastroState extends State<Cadastro> {
               ),
             ),
             const SizedBox(height: 16),
-            // 8. Adiciona os novos campos na tela
             TextFormField(
               controller: cepController,
               inputFormatters: [cepMaskFormatter],
               keyboardType: TextInputType.number,
               cursorColor: Colors.blue,
-              // *** MUDANÇA AQUI ***
-              // Adiciona o onChanged para buscar automaticamente
+
               onChanged: (value) {
                 if (value.length == 9) {
                   _buscarCep();
@@ -212,13 +195,11 @@ class _CadastroState extends State<Cadastro> {
               decoration: inputDecorationAzul.copyWith(
                 labelText: 'CEP',
                 hintText: '#####-###',
-                // 9. Adiciona o botão de busca de CEP
                 suffixIcon: _isBuscandoCep
                     ? const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: CircularProgressIndicator(),
                 )
-                // Removemos o botão, pois agora é automático
                     : null,
               ),
             ),
@@ -247,7 +228,6 @@ class _CadastroState extends State<Cadastro> {
               ),
             ),
             const SizedBox(height: 16),
-            // ADICIONA O NOVO CAMPO NA TELA
             TextFormField(
               controller: estadoController,
               cursorColor: Colors.blue,
@@ -256,7 +236,7 @@ class _CadastroState extends State<Cadastro> {
               ),
             ),
             const SizedBox(height: 16),
-            // --- Fim dos novos campos ---
+
             TextFormField(
               controller: oqSenteController,
               cursorColor: Colors.blue,
@@ -265,7 +245,6 @@ class _CadastroState extends State<Cadastro> {
               ),
             ),
             const SizedBox(height: 32),
-            // ... (resto do seu código do botão)
             ElevatedButton(
               onPressed: _isLoading ? null : _fazerCadastro,
               style: ElevatedButton.styleFrom(

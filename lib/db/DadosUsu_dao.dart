@@ -3,8 +3,6 @@ import 'package:respire_mais/domain/DadosUsu.dart';
 import 'package:sqflite/sqflite.dart' show Database;
 
 class DadosUsuDao {
-  // --- MÉTODO ATUALIZADO ---
-  // Agora retorna um Future<DadosUsu?> (nullable)
   Future<DadosUsu?> autenticacao(String email, String senha) async {
     Database db = await DBhelper().initDB();
 
@@ -15,10 +13,8 @@ class DadosUsuDao {
     var result = await db.rawQuery(sql, [email, senha]);
     print(result);
     if (result.isNotEmpty) {
-      // Se encontrou, retorna o objeto DadosUsu a partir do JSON
       return DadosUsu.fromJson(result.first);
     }
-    // Se não encontrou, retorna null
     return null;
   }
 
@@ -41,7 +37,6 @@ class DadosUsuDao {
         print('Senha: ${r['senha']}');
         print('Data de Nascimento: ${r['dataNasc']}');
         print('O que sente: ${r['oqSente']}');
-        // Adicione os novos campos se precisar depurar
       }
     }
   }

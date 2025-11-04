@@ -1,6 +1,4 @@
 class Endereco {
-  // Os nomes das variáveis continuam os mesmos
-  // para que o seu 'cadastro.dart' não quebre
   late String cep;
   late String rua;
   late String bairro;
@@ -15,20 +13,18 @@ class Endereco {
     required this.estado,
   });
 
-  // A MUDANÇA ESTÁ AQUI
-  // Atualizamos o 'fromJson' para os campos da API ViaCEP
   Endereco.fromJson(Map<String, dynamic> json) {
     cep = json['cep'] ?? '';
-    rua = json['logradouro'] ?? ''; // 'logradouro' é o nome da rua na ViaCEP
+    rua = json['logradouro'] ?? '';
     bairro = json['bairro'] ?? '';
-    cidade = json['localidade'] ?? ''; // 'localidade' é a cidade na ViaCEP
-    estado = json['uf'] ?? ''; // 'uf' é o estado na ViaCEP
+    cidade = json['localidade'] ?? '';
+    estado = json['uf'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['cep'] = this.cep;
-    data['logradouro'] = this.rua; // Poderia ser 'rua' aqui, mas mantemos o padrão
+    data['logradouro'] = this.rua;
     data['bairro'] = this.bairro;
     data['localidade'] = this.cidade;
     data['uf'] = this.estado;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:respire_mais/db/shared_prefs.dart';
 import 'package:respire_mais/login.dart';
+import 'package:respire_mais/menu.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -13,14 +14,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
-  static const int tempoDeRespiracao = 2; // Segundos para inspirar (ou expirar)
-  static const int tempoTotalDaTela = 4; // Segundos totais que a splash fica visível
+  static const int tempoDeRespiracao = 2;
+  static const int tempoTotalDaTela = 4;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: this,
+      vsync: this, // ticker
       duration: const Duration(seconds: tempoDeRespiracao),
     );
 
@@ -50,7 +51,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     if (mounted) {
       if (isLoggedIn) {
         Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Login(),
+          builder: (context) => Login(), //Menu(),
         ));
       } else {
         Navigator.pushReplacement(context, MaterialPageRoute(
@@ -75,8 +76,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             ),
             const Spacer(),
             const CircularProgressIndicator(
-              backgroundColor: Color(0xFFE0E0E0),
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              backgroundColor: Color(0xFFE0E0E0), //cinza
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), //azul
             ),
             const SizedBox(height: 64),
           ],

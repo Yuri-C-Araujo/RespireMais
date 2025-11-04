@@ -4,7 +4,6 @@ import 'package:respire_mais/cadastro.dart' show Cadastro;
 import 'package:flutter/material.dart';
 import 'package:respire_mais/db/shared_prefs.dart';
 
-// 1. Imports para a API Falsa
 import 'package:respire_mais/api/banco_api.dart';
 import 'package:respire_mais/domain/DadosUsu.dart';
 
@@ -20,7 +19,6 @@ class _LoginState extends State<Login> {
   TextEditingController senhaController = TextEditingController();
   bool _isLoading = false;
 
-  // 2. Lógica de login ATUALIZADA
   void _fazerLogin() async {
     FocusScope.of(context).unfocus();
     setState(() {
@@ -31,39 +29,30 @@ class _LoginState extends State<Login> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    // Agora guardamos o objeto do usuário, não apenas um boolean
     DadosUsu? usuarioLogado;
 
     try {
-      // ETAPA 1: Tenta autenticar pela API Falsa primeiro
       print('Tentando autenticação via API Falsa...');
       List<DadosUsu> usuariosDaApi = await BancoApi().findAll();
 
-      // --- CORREÇÃO AQUI ---
-      // Usamos try/catch porque firstWhere lança um erro se não encontrar
       try {
         usuarioLogado = usuariosDaApi.firstWhere(
               (u) => u.email == email && u.senha == senha,
         );
         print('Usuário encontrado na API Falsa.');
       } catch (e) {
-        // Se firstWhere falhar (não encontrou), usuarioLogado continua null
         print('Usuário não encontrado na API Falsa.');
         usuarioLogado = null;
       }
-      // --- FIM DA CORREÇÃO ---
 
       if (usuarioLogado == null) {
-        // ETAPA 2: Se não encontrar na API, tenta no banco de dados local
         print('Usuário não encontrado na API. Tentando banco de dados local...');
-        // A função agora retorna DadosUsu?
         usuarioLogado = await DadosUsuDao().autenticacao(email, senha);
         if (usuarioLogado != null) {
           print('Usuário encontrado no banco de dados local.');
         }
       }
     } catch (e) {
-      // ETAPA 3: Se a API falhar (ex: sem internet), tenta o banco local
       print(
           'Erro ao contatar API: $e. Tentando banco de dados local como fallback...');
       usuarioLogado = await DadosUsuDao().autenticacao(email, senha);
@@ -71,12 +60,8 @@ class _LoginState extends State<Login> {
 
     if (!mounted) return;
 
-    // ETAPA 4: Verifica o resultado final
     if (usuarioLogado != null) {
-      // Se encontrou em QUALQUER um dos dois, faz o login
       await SharedPrefs().saveUserStatus(true);
-      // --- LINHA MAIS IMPORTANTE ---
-      // Salva o nome do usuário no SharedPrefs
       await SharedPrefs().saveUserName(usuarioLogado.nome);
 
       Navigator.pushReplacement(
@@ -88,7 +73,6 @@ class _LoginState extends State<Login> {
         ),
       );
     } else {
-      // Se não encontrou em NENHUM, mostra o erro
       print('Usuário não encontrado em nenhuma fonte.');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
