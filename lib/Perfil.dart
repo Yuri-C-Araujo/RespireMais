@@ -98,15 +98,12 @@ class _PerfilState extends State<Perfil> {
 
   @override
   Widget build(BuildContext context) {
-    //if (_carregandoPerfil) {
-      //return Scaffold(body: Center(child: CircularProgressIndicator()));
-    //}
 
     if (perfil == null) {
       return Scaffold(body: Center(child: Text("Erro ao carregar perfil.")));
     }
 
-    String? urlParaMostrar = urlImagemOtimizada;
+    //String? urlParaMostrar = urlImagemOtimizada;
 
     return SafeArea(
       child: Scaffold(

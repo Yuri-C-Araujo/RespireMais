@@ -16,8 +16,8 @@ class CheetahoApiService {
           "quality": 80,
           "wait": true,
           "resize": {
-            "width": 100,
-            "height": 100,
+            "width": 1000,
+            "height": 1000,
             "strategy": "auto",
           }
         },

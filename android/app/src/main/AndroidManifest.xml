@@ -3,6 +3,8 @@
         android:label="respire_mais"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBFnh9fimzTTt9CVtDAn09Jm8Q-7jbOS4o"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
