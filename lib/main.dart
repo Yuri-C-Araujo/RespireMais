@@ -6,7 +6,7 @@ void main() {
   runApp(const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: GoogleMapsPage(
-        latLong: LatLng(-9.62, -36.77),
+        latLong: LatLng(-9.75164, -36.6604),
       )
   ));
 }
