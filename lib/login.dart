@@ -6,6 +6,8 @@ import 'package:respire_mais/db/shared_prefs.dart';
 
 import 'package:respire_mais/api/banco_api.dart';
 import 'package:respire_mais/domain/DadosUsu.dart';
+import 'package:respire_mais/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -63,6 +65,8 @@ class _LoginState extends State<Login> {
     if (usuarioLogado != null) {
       await SharedPrefs().saveUserStatus(true);
       await SharedPrefs().saveUserName(usuarioLogado.nome);
+
+      context.read<UserProvider>().setUser(usuarioLogado);
 
       Navigator.pushReplacement(
         context,

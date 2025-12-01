@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:respire_mais/db/shared_prefs.dart';
+import 'package:provider/provider.dart'; // Import do Provider
+import 'package:respire_mais/provider/user_provider.dart'; // Import do UserProvider
 import 'package:respire_mais/ia.dart';
 
 class Menu extends StatefulWidget {
@@ -11,29 +12,16 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  String _nomeUsuario = "";
-
-  @override
-  void initState() {
-    super.initState();
-    _carregarNomeUsuario();
-  }
-
-  void _carregarNomeUsuario() async {
-    String nomeCompleto = await SharedPrefs().getUserName();
-    if (nomeCompleto.isNotEmpty) {
-      setState(() {
-        _nomeUsuario = nomeCompleto.split(' ')[0].toUpperCase();
-      });
-    } else {
-      setState(() {
-        _nomeUsuario = "USUÁRIO"; // Um valor padrão
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    String nomeExibicao = userProvider.user?.nome ?? "VISITANTE";
+
+    if (nomeExibicao != "VISITANTE") {
+      nomeExibicao = nomeExibicao.split(' ')[0].toUpperCase();
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -42,8 +30,7 @@ class _MenuState extends State<Menu> {
         elevation: 0,
         actions: [
           Container(
-            margin: const EdgeInsets.all(
-                12),
+            margin: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
@@ -67,8 +54,6 @@ class _MenuState extends State<Menu> {
         ],
       ),
       body: ListView(
-        //child: Column(
-        //mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Center(
             heightFactor: 0.5,
@@ -79,7 +64,7 @@ class _MenuState extends State<Menu> {
           ),
           Center(
             child: Text(
-              'OLÁ, $_nomeUsuario',
+              'OLÁ, $nomeExibicao',
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.blue,
@@ -88,50 +73,11 @@ class _MenuState extends State<Menu> {
             ),
           ),
 
-          const SizedBox(height: 20), // Espaço
-
+          const SizedBox(height: 20),
           // Primeira linha de botões
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // Espaça os botões igualmente na linha
             children: [
-              // Botão 1
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blue,
-                  // Cor dos elementos dentro
-                  minimumSize: Size(140, 140), //tamanho mínimo do botão
-                  elevation: 6,
-                  shadowColor: Colors.black87,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Column(
-                  // Conteúdo interno do botão
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.calendar_today_outlined,
-                      size: 60,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(height: 8), // Espaço entre ícone e texto
-                    Text(
-                      'AGENDA',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Botão 2 (Medicamentos)
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
@@ -147,32 +93,40 @@ class _MenuState extends State<Menu> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.medical_services,
-                      size: 60,
-                      color: Colors.blue,
-                    ),
+                    Icon(Icons.calendar_today_outlined, size: 60, color: Colors.blue),
                     SizedBox(height: 8),
-                    Text(
-                      'MEDICAMENTOS',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
+                    Text('AGENDA', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blue,
+                  minimumSize: Size(140, 140),
+                  elevation: 6,
+                  shadowColor: Colors.black87,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.medical_services, size: 60, color: Colors.blue),
+                    SizedBox(height: 8),
+                    Text('MEDICAMENTOS', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.blue)),
                   ],
                 ),
               ),
             ],
           ),
-
           const SizedBox(height: 20),
           // Segunda linha de botões
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Botão 3 (Relatório)
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
@@ -188,25 +142,12 @@ class _MenuState extends State<Menu> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.note_alt_outlined,
-                      size: 60,
-                      color: Colors.blue,
-                    ),
+                    Icon(Icons.note_alt_outlined, size: 60, color: Colors.blue),
                     SizedBox(height: 8),
-                    Text(
-                      'RELATÓRIO',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
+                    Text('RELATÓRIO', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
                   ],
                 ),
               ),
-
-              // Botão 4 (Histórico)
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
@@ -222,36 +163,20 @@ class _MenuState extends State<Menu> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.menu_book_outlined,
-                      size: 60,
-                      color: Colors.blue,
-                    ),
+                    Icon(Icons.menu_book_outlined, size: 60, color: Colors.blue),
                     SizedBox(height: 8),
-                    Text(
-                      'HISTÓRICO',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
+                    Text('HISTÓRICO', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
                   ],
                 ),
               ),
             ],
           ),
-
           const SizedBox(height: 20),
           // Terceira linha
           Center(
             child: ElevatedButton(
               onPressed: () {
-                // Navega para a tela do assistente
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Ia()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Ia()));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -266,28 +191,16 @@ class _MenuState extends State<Menu> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.psychology_alt_outlined,
-                    size: 60,
-                    color: Colors.blue,
-                  ),
+                  Icon(Icons.psychology_alt_outlined, size: 60, color: Colors.blue),
                   SizedBox(height: 8),
-                  Text(
-                    'ASSISTENTE',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
+                  Text('ASSISTENTE', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue)),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 20), // Espaço extra no final
+          const SizedBox(height: 20),
         ],
       ),
-      //),
     );
   }
 }
