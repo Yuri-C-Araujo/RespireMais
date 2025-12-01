@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: 3.9.0
+  sdk: 3.10.1
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,6 +39,7 @@ dependencies:
   shared_preferences:
   dio: 5.4.3+1
   url_launcher: 6.3.0
+  provider:
 
 
 dev_dependencies:
