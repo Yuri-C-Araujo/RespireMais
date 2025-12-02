@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:respire_mais/pages/Historico.dart';
 import 'package:respire_mais/API/API_service.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
+import 'package:provider/provider.dart';
+import 'package:respire_mais/Provider/Hist_provider.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -15,13 +17,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   static const int tempoDeRespiracao = 2;
   static const int tempoTotalDaTela = 6;
 
-  late Future<List<Informacoes>> _historicoFuture;
-
   @override
   void initState() {
     super.initState();
-
-    _historicoFuture = ApiService.fetchHistoricoFake();
 
     _animationController = AnimationController(
       vsync: this,
@@ -43,16 +41,19 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  _navigateToHome() async {
+  Future<void> _navigateToHome() async {
     final timerFuture = Future.delayed(
         const Duration(seconds: tempoTotalDaTela));
     try {
-      await Future.wait([_historicoFuture, timerFuture]);
+    List<Informacoes> dataApi = await ApiService.fetchHistoricoFake();
+    await timerFuture;
+
       if (mounted) {
+        context.read<HistProvider>().setList(dataApi);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Historico(historicoFuture: _historicoFuture),
+            builder: (context) => Historico(),
           ),
         );
       }
@@ -62,7 +63,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Historico(historicoFuture: _historicoFuture),
+          builder: (context) => Historico(),
         ),
       );
     }

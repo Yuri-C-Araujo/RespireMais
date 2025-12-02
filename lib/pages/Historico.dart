@@ -2,16 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:respire_mais/domain/Informacoes.dart';
 import 'package:respire_mais/pages/Confirmacao_pdf.dart';
-
+import 'package:provider/provider.dart';
+import 'package:respire_mais/Provider/Hist_provider.dart';
 
 class Historico extends StatefulWidget {
 
-  final Future<List<Informacoes>> historicoFuture;
 
-  const Historico({
-    super.key,
-    required this.historicoFuture,
-  });
+
+  const Historico({super.key,});
 
   @override
   State<Historico> createState() => _HistoricoState();
@@ -28,6 +26,9 @@ class _HistoricoState extends State<Historico> {
 
   @override
   Widget build(BuildContext context) {
+
+    final listaInformacoes = context.watch<HistProvider>().listInformacoes;
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -81,33 +82,16 @@ class _HistoricoState extends State<Historico> {
             ),
             SizedBox(height: 20),
 
-            FutureBuilder<List<Informacoes>>(
-              future: widget.historicoFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Erro ao carregar histórico: ${snapshot.error}',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  );
-                }
-                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                  _listaCarregada = snapshot.data!;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _listaCarregada.length,
-                    itemBuilder: (context, i) {
-                      return _buildInformacao(_listaCarregada[i]);
-                    },
-                  );
-                }
-                return Center(child: Text('Nenhum histórico encontrado.'));
-              },
+          Expanded(
+            child: listaInformacoes.isEmpty ?
+            const Center(child: Text("Nenhum histórico encontrado.")) : ListView.builder(
+                itemCount: listaInformacoes.length,
+                itemBuilder: (context, index){
+                  final info = listaInformacoes[index];
+                  return _buildInformacao(info);
+                },
             ),
+          ),
 
             SizedBox(height: 100),
             ElevatedButton(

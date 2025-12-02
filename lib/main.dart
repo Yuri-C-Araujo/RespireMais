@@ -5,7 +5,8 @@ import 'package:respire_mais/Provider/Hist_provider.dart';
 
 void main() {
   runApp(
-     MultiProvider(providers: [
+     MultiProvider(
+       providers: [
        ChangeNotifierProvider(create: (_) => HistProvider()),
      ],
      child: const MaterialApp(
