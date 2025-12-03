@@ -60,12 +60,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     } catch (e) {
       print('Erro ao carregar dados na Splash: $e');
       await timerFuture;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Historico(),
-        ),
-      );
+      if(mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Historico(),
+          ),
+        );
+      }
     }
   }
   @override

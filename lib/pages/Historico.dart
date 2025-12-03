@@ -28,6 +28,7 @@ class _HistoricoState extends State<Historico> {
   Widget build(BuildContext context) {
 
     final listaInformacoes = context.watch<HistProvider>().listInformacoes;
+    _listaCarregada = listaInformacoes;
 
     return SafeArea(
       child: Scaffold(
@@ -82,16 +83,10 @@ class _HistoricoState extends State<Historico> {
             ),
             SizedBox(height: 20),
 
-          Expanded(
-            child: listaInformacoes.isEmpty ?
-            const Center(child: Text("Nenhum histórico encontrado.")) : ListView.builder(
-                itemCount: listaInformacoes.length,
-                itemBuilder: (context, index){
-                  final info = listaInformacoes[index];
-                  return _buildInformacao(info);
-                },
+            listaInformacoes.isEmpty ? const Center(child: Text("Nenhum histórico encontrado.")) : Column(
+
+               children: listaInformacoes.map((info) => _buildInformacao(info)).toList(),
             ),
-          ),
 
             SizedBox(height: 100),
             ElevatedButton(

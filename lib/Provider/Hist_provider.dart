@@ -7,6 +7,7 @@ class HistProvider extends ChangeNotifier{
 
   void setList(List<Informacoes> newList){
     _listInformacoes = newList;
+    print('HistProvider: Lista atualizada com ${_listInformacoes.length} itens');
     notifyListeners();
   }
 }
