@@ -25,6 +25,8 @@ class DadosUsu{
     required this.estado,
 });
 
+  String get nomeMaiusculo => nome.split(' ')[0].toUpperCase();
+
   DadosUsu.fromJson(Map<String, dynamic> json){
     nome = json['nome'];
     email = json['email'];

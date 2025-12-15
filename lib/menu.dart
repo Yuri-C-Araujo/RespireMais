@@ -16,11 +16,7 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    String nomeExibicao = userProvider.user?.nome ?? "VISITANTE";
-
-    if (nomeExibicao != "VISITANTE") {
-      nomeExibicao = nomeExibicao.split(' ')[0].toUpperCase();
-    }
+    String nomeExibicao = userProvider.nomeUsuario;
 
     return Scaffold(
       backgroundColor: Colors.white,
